@@ -3,9 +3,9 @@ package framgia.com.mynote.screen.edit;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 import framgia.com.mynote.R;
@@ -20,8 +20,23 @@ public class NoteUpdateActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_update, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_save) {
+            return false;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     private void initView() {
-        ActivityNoteDetailBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_note_detail);
+        ActivityNoteDetailBinding binding =
+                DataBindingUtil.setContentView(this, R.layout.activity_note_detail);
         initToolbar(binding);
     }
 
