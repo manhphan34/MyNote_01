@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/navigation_alarm"
+        android:icon="@drawable/ic_alarm_orange"
+        android:title="@string/alarm" />
+    <item
+        android:id="@+id/navigation_image"
+        android:icon="@drawable/ic_image_orange"
+        android:title="@string/menu_image_title" />
+    <item
+        android:id="@+id/navigation_audio"
+        android:icon="@drawable/ic_audio_prange"
+        android:title="@string/menu_audio_title" />
+    <item
+        android:id="@+id/navigation_location"
+        android:icon="@drawable/ic_location_orange"
+        android:title="@string/menu_location_title"/>
+    <item
+        android:id="@+id/navigation_task"
+        android:icon="@drawable/ic_task"
+        android:title="@string/menu_task_title" />
+</menu>
