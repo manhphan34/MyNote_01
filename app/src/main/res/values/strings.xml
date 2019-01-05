@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MyNote</string>
+    <string name="app_name">My Note</string>
     <string name="action_search">Search</string>
     <string name="action_filter">Filter</string>
     <string name="err_get_note_failed">Unknown error occurred</string>

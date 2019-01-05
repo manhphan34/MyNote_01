@@ -43,8 +43,8 @@ public class NoteRepository implements NoteDataSource.Local {
     }
 
     @Override
-    public Flowable<List<Note>> getAllNote() {
-        return mLocal.getAllNote();
+    public Flowable<List<Note>> getNotes() {
+        return mLocal.getNotes();
     }
 
     @Override

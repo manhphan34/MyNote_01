@@ -47,7 +47,7 @@ public class NoteLocalDataSource implements NoteDataSource.Local {
     }
 
     @Override
-    public Flowable<List<Note>> getAllNote() {
+    public Flowable<List<Note>> getNotes() {
         return mNoteDAO.getAllNote();
     }
 
