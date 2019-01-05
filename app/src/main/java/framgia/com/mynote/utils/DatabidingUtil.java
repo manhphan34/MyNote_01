@@ -2,7 +2,7 @@ package framgia.com.mynote.utils;
 
 import android.databinding.BindingAdapter;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
+
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -34,7 +34,6 @@ public class DatabidingUtil {
                 .getString(R.string.alarm_content)
                 .concat(DateTimeUtil.convertLongToDate(time)));
     }
-
     @BindingAdapter("setAdapter")
     public static void setAdapter(RecyclerView recyclerView, RecyclerView.Adapter adapter) {
         if (recyclerView != null) {

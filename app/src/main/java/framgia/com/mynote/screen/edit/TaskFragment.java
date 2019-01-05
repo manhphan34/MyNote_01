@@ -70,8 +70,11 @@ public class TaskFragment extends Fragment {
         return mTaskAdapter;
     }
 
+    private void initView() {
+        initRecycle();
+    }
+
     private void initData() {
-        mNote = getNote();
         if (mTaskBinding != null) {
             mTaskBinding.setLifecycleOwner(this);
             mTaskBinding.setTaskFragment(this);

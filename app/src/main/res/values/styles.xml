@@ -22,7 +22,11 @@
 
     <style name="TextTitle" parent="Text">
         <item name="android:maxLength">50</item>
+<<<<<<< b2c808d59b7532e65b3c18a5d47b0c3f8f89c6b0
         <item name="android:textSize">22sp</item>
+=======
+        <item name="android:textSize">@dimen/sp_20</item>
+>>>>>>> create_ui_2
         <item name="android:textStyle">bold</item>
         <item name="android:maxLines">1</item>
     </style>

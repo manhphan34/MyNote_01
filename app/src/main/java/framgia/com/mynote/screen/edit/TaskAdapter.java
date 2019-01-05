@@ -55,7 +55,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
     public static class TaskViewHolder extends RecyclerView.ViewHolder {
         private ItemTaskBinding mBinding;
-
         public TaskViewHolder(ItemTaskBinding binding) {
             super(binding.getRoot());
             mBinding = binding;

@@ -18,16 +18,28 @@
             setCheckBox="@{task.done == 1 ? true : false}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+<<<<<<< b2c808d59b7532e65b3c18a5d47b0c3f8f89c6b0
             android:layout_marginTop="@dimen/dp_8"
             android:layout_marginBottom="@dimen/dp_8"
+=======
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="6dp"
+>>>>>>> create_ui_2
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+<<<<<<< b2c808d59b7532e65b3c18a5d47b0c3f8f89c6b0
         <EditText
             android:id="@+id/text_task_title"
             style="@style/TextShowInformation"
             android:layout_width="@dimen/dp_0"
+=======
+        <TextView
+            android:id="@+id/text_task_title"
+            style="@style/TextShowInformation"
+            android:layout_width="0dp"
+>>>>>>> create_ui_2
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dp_8"
             android:layout_marginTop="@dimen/dp_8"
@@ -41,11 +53,22 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_12"
             android:layout_marginEnd="@dimen/dp_8"
+<<<<<<< b2c808d59b7532e65b3c18a5d47b0c3f8f89c6b0
             android:layout_marginBottom="@dimen/dp_8"
+=======
+            android:layout_marginBottom="8dp"
+>>>>>>> create_ui_2
             android:background="@android:color/white"
             android:src="@drawable/ic_garbage"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+<<<<<<< b2c808d59b7532e65b3c18a5d47b0c3f8f89c6b0
             app:layout_constraintTop_toTopOf="parent" />
     </android.support.constraint.ConstraintLayout>
 </layout>
+=======
+            app:layout_constraintTop_toTopOf="parent"
+            />
+    </android.support.constraint.ConstraintLayout>
+</layout>
+>>>>>>> create_ui_2
