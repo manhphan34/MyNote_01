@@ -16,7 +16,7 @@ public interface NoteDataSource {
 
         void deleteAllNote();
 
-        Flowable<List<Note>> getAllNote();
+        Flowable<List<Note>> getNotes();
 
         Flowable<List<Note>> getNotesByKey(String key);
 

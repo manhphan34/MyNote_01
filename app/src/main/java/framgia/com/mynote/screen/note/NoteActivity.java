@@ -1,17 +1,21 @@
 package framgia.com.mynote.screen.note;
 
-import android.app.SearchManager;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import framgia.com.mynote.R;
@@ -26,6 +30,8 @@ public class NoteActivity extends AppCompatActivity {
     private NoteViewModel mViewModel;
     private ActivityNoteBinding mBinding;
     private SearchView mSearchView;
+    private List<Note> mNotes;
+    private NotesAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,10 +40,12 @@ public class NoteActivity extends AppCompatActivity {
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_note);
         mBinding.setLifecycleOwner(this);
         mBinding.setViewModel(mViewModel);
+        initToolBar();
+        initRecyclerView();
         mViewModel.getNotes().observe(this, new Observer<List<Note>>() {
             @Override
             public void onChanged(@Nullable List<Note> notes) {
-
+                mAdapter.addData(notes);
             }
         });
         mViewModel.getErrorMessage().observe(this, new Observer<String>() {
@@ -50,14 +58,33 @@ public class NoteActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_note, menu);
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        mSearchView = (SearchView) menu.findItem(R.id.action_search)
-                .getActionView();
-        mSearchView.setSearchableInfo(searchManager
-                .getSearchableInfo(getComponentName()));
-        mSearchView.setMaxWidth(Integer.MAX_VALUE);
-        return true;
+        getMenuInflater().inflate(R.menu.activity_note, menu);
+        MenuItem searchItem = menu.findItem(R.id.search_home);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mViewModel.onDestroy();
+    }
+
+    public void initToolBar() {
+        setSupportActionBar(mBinding.toolBarInclude.toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        TextView textTitle  = mBinding.toolBarInclude.textTitle;
+        textTitle.setText(getResources().getString(R.string.app_name));
+    }
+
+    public void initRecyclerView() {
+        mNotes = new ArrayList<>();
+        mBinding.recyclerNote.setLayoutManager(new LinearLayoutManager(this));
+        mBinding.recyclerNote.addItemDecoration(new DividerItemDecoration(this,
+                LinearLayoutManager.VERTICAL));
+        mBinding.recyclerNote.setItemAnimator(new DefaultItemAnimator());
+        mAdapter = new NotesAdapter(this, mNotes);
+        mBinding.recyclerNote.setAdapter(mAdapter);
     }
 
     public void onGetDataFailed(String s) {
