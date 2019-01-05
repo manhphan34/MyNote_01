@@ -27,6 +27,7 @@ public class NoteUpdateActivity extends AppCompatActivity implements HandlerClic
         intent.putExtra(EXTRA_NOTE, note);
         return intent;
     }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

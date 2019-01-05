@@ -45,6 +45,7 @@ public class NoteViewModel extends AndroidViewModel {
                 .getInstance(NoteLocalDataSource
                         .getInstance(mNoteDatabase.noteDao(), mNoteDatabase.taskDAO()));
         mCompositeDisposable = new CompositeDisposable();
+
     }
 
     public MutableLiveData<List<Note>> getNotes() {

@@ -3,7 +3,6 @@
     <string name="action_search">Search</string>
     <string name="action_filter">Filter</string>
     <string name="err_get_note_failed">Unknown error occurred</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="note_title_hint">Insert your title</string>
     <string name="text_description_hint">Insert your description</string>
