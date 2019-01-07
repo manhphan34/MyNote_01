@@ -3,6 +3,7 @@ package framgia.com.mynote.screen.edit;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -101,5 +102,9 @@ public class NoteUpdateActivity extends AppCompatActivity implements HandlerClic
             return this.getIntent().getParcelableExtra(EXTRA_NOTE);
         }
         return new Note.Builder().build();
+    }
+
+    private void onPlayAudioFail() {
+        Toast.makeText(getApplicationContext(), getString(R.string.audio_load_fail), Toast.LENGTH_SHORT);
     }
 }

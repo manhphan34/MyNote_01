@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+<<<<<<< 8b4f9499781e2aa9bde24fbbae947ef1f23305fe
 <<<<<<< 7873bc2af1c44d4868a6a00177911aa9d982a695
+=======
+>>>>>>> handle click
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:bind="http://schemas.android.com/tools">
 
     <data>
+<<<<<<< 8b4f9499781e2aa9bde24fbbae947ef1f23305fe
 
         <import type="android.view.View" />
 
@@ -19,6 +23,17 @@
 =======
     xmlns:app="http://schemas.android.com/apk/res-auto">
 >>>>>>> create ui
+=======
+        <import type="android.view.View"/>
+        <variable
+            name="note"
+            type="framgia.com.mynote.data.model.Note" />
+
+        <variable
+            name="noteUpdate"
+            type="framgia.com.mynote.screen.edit.NoteUpdateActivity" />
+    </data>
+>>>>>>> handle click
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
@@ -64,10 +79,14 @@
                     android:layout_marginTop="@dimen/dp_8"
                     android:background="@android:color/transparent"
                     android:hint="@string/note_title_hint"
+<<<<<<< 8b4f9499781e2aa9bde24fbbae947ef1f23305fe
 <<<<<<< 7873bc2af1c44d4868a6a00177911aa9d982a695
                     android:text="@{note.title}"
 =======
 >>>>>>> create ui
+=======
+                    android:text="@{note.title}"
+>>>>>>> handle click
                     app:layout_constraintEnd_toStartOf="parent"
                     app:layout_constraintHorizontal_bias="0.51"
                     app:layout_constraintStart_toEndOf="parent"
@@ -102,10 +121,14 @@
                     android:gravity="top"
                     android:hint="@string/text_description_hint"
                     android:maxLength="500"
+<<<<<<< 8b4f9499781e2aa9bde24fbbae947ef1f23305fe
 <<<<<<< 7873bc2af1c44d4868a6a00177911aa9d982a695
                     android:text="@{note.description}"
 =======
 >>>>>>> create ui
+=======
+                    android:text="@{note.description}"
+>>>>>>> handle click
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/view" />
@@ -133,6 +156,7 @@
                     android:layout_marginStart="@dimen/dp_4"
                     android:layout_marginTop="@dimen/dp_8"
                     android:layout_marginEnd="@dimen/dp_16"
+<<<<<<< 8b4f9499781e2aa9bde24fbbae947ef1f23305fe
 <<<<<<< 7873bc2af1c44d4868a6a00177911aa9d982a695
                     android:visibility="@{note.time > 0 ? View.VISIBLE : View.INVISIBLE}"
                     app:layout_constraintHorizontal_bias="0.0"
@@ -145,13 +169,22 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/frame_tasks" />
 >>>>>>> create ui
+=======
+                    android:visibility="@{note.time != null ? View.VISIBLE : View.INVISIBLE}"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/frame_tasks"
+                    bind:setText="@{note.location}"
+                    bind:title="--"
+                    value="@{note.time}" />
+>>>>>>> handle click
 
                 <TextView
                     android:id="@+id/text_note_location"
-                    style="@style/TextShowInformation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dp_8"
+<<<<<<< 8b4f9499781e2aa9bde24fbbae947ef1f23305fe
 <<<<<<< 7873bc2af1c44d4868a6a00177911aa9d982a695
                     android:text="@{@string/location_content(note.location)}"
                     android:visibility="@{note.location != null ? View.VISIBLE : View.INVISIBLE}"
@@ -163,6 +196,14 @@
                     app:layout_constraintStart_toEndOf="@+id/text_note_alarm"
                     app:layout_constraintTop_toBottomOf="@+id/frame_tasks" />
 >>>>>>> create ui
+=======
+                    android:visibility="@{note.location != null ? View.VISIBLE : View.INVISIBLE}"
+                    app:layout_constraintStart_toEndOf="@+id/text_note_alarm"
+                    app:layout_constraintTop_toBottomOf="@+id/frame_tasks"
+                    bind:style="@style/TextShowInformation"
+                    bind:title="on"
+                    bind:value="@{note.location}" />
+>>>>>>> handle click
 
                 <TextView
                     android:id="@+id/text_note_audio"
@@ -171,12 +212,17 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/dp_8"
                     android:layout_marginTop="@dimen/dp_8"
+<<<<<<< 8b4f9499781e2aa9bde24fbbae947ef1f23305fe
 <<<<<<< 7873bc2af1c44d4868a6a00177911aa9d982a695
                     android:text="@string/audio_title"
                     android:visibility="@{note.audio != null ? View.VISIBLE : View.INVISIBLE}"
 =======
                     android:text="Audio :"
 >>>>>>> create ui
+=======
+                    android:text="@string/audio_title"
+                    android:visibility="@{note.audio != null ? View.VISIBLE : View.INVISIBLE}"
+>>>>>>> handle click
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/text_note_location" />
 
@@ -187,6 +233,7 @@
                     android:layout_marginStart="@dimen/dp_4"
                     android:layout_marginTop="@dimen/dp_8"
                     android:background="@android:color/white"
+<<<<<<< 8b4f9499781e2aa9bde24fbbae947ef1f23305fe
 <<<<<<< 7873bc2af1c44d4868a6a00177911aa9d982a695
                     android:onClick="@{()-> media.playAudio()}"
                     android:src="@drawable/ic_speaker_on"
@@ -198,21 +245,33 @@
                     android:id="@+id/image_note"
                     imageUrl="@{note.image}"
 =======
+=======
+                    android:onClick="@{()-> noteUpdate.playAudio()}"
+                    android:visibility="@{note.audio != null ? View.VISIBLE : View.INVISIBLE}"
+>>>>>>> handle click
                     app:layout_constraintStart_toEndOf="@+id/text_note_audio"
                     app:layout_constraintTop_toBottomOf="@+id/text_note_location"
                     app:srcCompat="@drawable/ic_speaker_on" />
 
                 <ImageView
                     android:id="@+id/image_note"
+<<<<<<< 8b4f9499781e2aa9bde24fbbae947ef1f23305fe
 >>>>>>> create ui
+=======
+                    imageUrl="@{note.image}"
+>>>>>>> handle click
                     android:layout_width="@dimen/dp_100"
                     android:layout_height="@dimen/dp_100"
                     android:layout_marginTop="@dimen/dp_8"
                     android:layout_marginBottom="@dimen/dp_8"
+<<<<<<< 8b4f9499781e2aa9bde24fbbae947ef1f23305fe
 <<<<<<< 7873bc2af1c44d4868a6a00177911aa9d982a695
                     android:visibility="@{note.image != null ? View.VISIBLE : View.INVISIBLE}"
 =======
 >>>>>>> create ui
+=======
+                    android:visibility="@{note.image != null ? View.VISIBLE : View.INVISIBLE}"
+>>>>>>> handle click
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

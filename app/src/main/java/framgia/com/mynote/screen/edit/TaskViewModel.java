@@ -36,6 +36,8 @@ public class TaskViewModel extends AndroidViewModel {
         return mTasks;
     }
 
+
+
     private void getData(int nodeId) {
         Disposable disposable = mNoteRepository.getAllTaskOfNote(nodeId)
                 .observeOn(AndroidSchedulers.mainThread())
