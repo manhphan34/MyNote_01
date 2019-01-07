@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
-            name="updateNote"
-            type="framgia.com.mynote.screen.edit.NoteUpdateActivity" />
+            name="media"
+            type="framgia.com.mynote.screen.edit.MediaNoteUpdate" />
 
         <variable
             name="note"
@@ -25,6 +28,7 @@
             android:id="@+id/scroll_view"
             android:layout_width="@dimen/dp_0"
             android:layout_height="@dimen/dp_0"
+            android:background="@android:color/white"
             app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -93,9 +97,11 @@
                     android:layout_marginStart="@dimen/dp_4"
                     android:layout_marginTop="@dimen/dp_8"
                     android:layout_marginEnd="@dimen/dp_16"
+                    android:visibility="@{note.time > 0 ? View.VISIBLE : View.INVISIBLE}"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/frame_tasks" />
+                    app:layout_constraintTop_toBottomOf="@+id/frame_tasks"
+                    app:setDate="@{note.time}" />
 
                 <TextView
                     android:id="@+id/text_note_location"
@@ -103,8 +109,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dp_8"
+                    android:text="@{@string/location_content(note.location)}"
+                    android:visibility="@{note.location != null ? View.VISIBLE : View.INVISIBLE}"
                     app:layout_constraintStart_toEndOf="@+id/text_note_alarm"
-                    app:layout_constraintTop_toBottomOf="@+id/frame_tasks" />
+                    app:layout_constraintTop_toBottomOf="@+id/frame_tasks"
+                    bind:style="@style/TextShowInformation" />
 
                 <TextView
                     android:id="@+id/text_note_audio"
@@ -113,8 +122,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/dp_8"
                     android:layout_marginTop="@dimen/dp_8"
-                    android:text="@string/button_audio_title"
-                    android:visibility="invisible"
+                    android:text="@string/audio_title"
+                    android:visibility="@{note.audio != null ? View.VISIBLE : View.INVISIBLE}"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/text_note_location" />
 
@@ -125,20 +134,20 @@
                     android:layout_marginStart="@dimen/dp_4"
                     android:layout_marginTop="@dimen/dp_8"
                     android:background="@android:color/white"
-                    android:contentDescription="@string/app_name"
+                    android:onClick="@{()-> media.playAudio()}"
                     android:src="@drawable/ic_speaker_on"
-                    android:visibility="invisible"
+                    android:visibility="@{note.audio != null ? View.VISIBLE : View.INVISIBLE}"
                     app:layout_constraintStart_toEndOf="@+id/text_note_audio"
                     app:layout_constraintTop_toBottomOf="@+id/text_note_location" />
 
                 <ImageView
                     android:id="@+id/image_note"
+                    imageUrl="@{note.image}"
                     android:layout_width="@dimen/dp_100"
                     android:layout_height="@dimen/dp_100"
                     android:layout_marginTop="@dimen/dp_8"
                     android:layout_marginBottom="@dimen/dp_8"
-                    android:contentDescription="@string/app_name"
-                    android:visibility="invisible"
+                    android:visibility="@{note.image != null ? View.VISIBLE : View.INVISIBLE}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

@@ -18,4 +18,8 @@
     <string name="button_delete">Delete</string>
     <string name="button_edit">Edit</string>
     <string name="msg_delete_note_success">Delete note success !!!</string>
+    <string name="audio_load_fail">Play audio failed ! Please try again</string>
+    <string name="audio_title">Audio :</string>
+    <string name="alarm_content">-- at&#160;</string>
+    <string name="location_content">on %s;</string>
 </resources>
