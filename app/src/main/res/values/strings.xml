@@ -3,4 +3,16 @@
     <string name="action_search">Search</string>
     <string name="action_filter">Filter</string>
     <string name="err_get_note_failed">Unknown error occurred</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="note_title_hint">Insert your title</string>
+    <string name="text_description_hint">Insert your description</string>
+    <string name="alarm">alarm</string>
+    <string name="menu_image_title">Image</string>
+    <string name="menu_audio_title">Audio</string>
+    <string name="menu_location_title">Location</string>
+    <string name="menu_task_title">Task</string>
+    <string name="button_audio_title">Audio</string>
+    <string name="tool_bar_title">Note</string>
 </resources>
