@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <variable
+            name="noteUpdate"
+            type="framgia.com.mynote.screen.edit.NoteUpdateActivity" />
+    </data>
+
+    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/dp_4">
+
+        <Button
+            android:id="@+id/button_choose_audio_from_file"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/border_button"
+            android:drawableTop="@drawable/ic_gallery"
+            android:padding="@dimen/dp_4"
+            android:text="@string/button_gallery_title"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            app:layout_constraintEnd_toStartOf="@+id/button_create_new_record"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+            android:id="@+id/button_create_new_record"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/border_button"
+            android:drawableTop="@drawable/ic_new_file"
+            android:onClick="@{()-> noteUpdate.showDialogRecordAudio()}"
+            android:padding="@dimen/dp_4"
+            android:text="@string/button_create_new_file"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/button_choose_audio_from_file" />
+    </android.support.constraint.ConstraintLayout>
+</layout>

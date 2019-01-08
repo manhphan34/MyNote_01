@@ -17,19 +17,11 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_task"
             setAdapter="@{taskFragment.taskAdapter}"
-<<<<<<< b2c808d59b7532e65b3c18a5d47b0c3f8f89c6b0
             android:layout_width="@dimen/dp_0"
-=======
-            android:layout_width="0dp"
->>>>>>> create_ui_2
             android:layout_height="wrap_content"
             app:layoutManager="android.support.v7.widget.LinearLayoutManager"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
     </android.support.constraint.ConstraintLayout>
-<<<<<<< b2c808d59b7532e65b3c18a5d47b0c3f8f89c6b0
 </layout>
-=======
-</layout>
->>>>>>> create_ui_2

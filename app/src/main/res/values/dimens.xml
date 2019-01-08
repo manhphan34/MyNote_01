@@ -16,13 +16,8 @@
     <dimen name="dp_2">2dp</dimen>
     <dimen name="dp_1">1dp</dimen>
     <dimen name="dp_32">32dp</dimen>
-<<<<<<< b2c808d59b7532e65b3c18a5d47b0c3f8f89c6b0
-    <dimen name="sp_22">22sp</dimen>
-=======
-    <dimen name="dp_12">12dp</dimen>
-    <dimen name="dp_100">100dp</dimen>
->>>>>>> create_ui_2
     <dimen name="sp_20">20sp</dimen>
     <dimen name="sp_18">18sp</dimen>
     <dimen name="sp_16">16sp</dimen>
+    <dimen name="sp_22">22sp</dimen>
 </resources>

@@ -21,4 +21,8 @@
     <string name="audio_title">Audio :</string>
     <string name="alarm_content">-- at&#160;</string>
     <string name="location_content">on %s;</string>
+    <string name="button_gallery_title">Gallery</string>
+    <string name="button_create_new_file">Create</string>
+    <string name="audio_record_fail">Record audio fail. Please try again later</string>
+    <string name="permission_granted_fail">You must grant permission for action</string>
 </resources>

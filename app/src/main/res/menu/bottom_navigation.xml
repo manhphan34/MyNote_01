@@ -21,9 +21,5 @@
         android:id="@+id/navigation_task"
         android:icon="@drawable/ic_task"
         android:title="@string/menu_task_title" />
-<<<<<<< 7873bc2af1c44d4868a6a00177911aa9d982a695
 </menu>
-=======
 
-</menu>
->>>>>>> create ui

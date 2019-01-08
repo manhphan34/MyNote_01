@@ -45,9 +45,4 @@ public class DatabidingUtil {
     public static void setChecked(CheckBox checkBox, boolean checked) {
         checkBox.setChecked(checked);
     }
-
-    @BindingAdapter({"title", "value"})
-    public static void setText(TextView text, String title, long value) {
-        text.setText(title.concat(DateTimeUtil.convertLongToDate(value)));
-    }
 }
