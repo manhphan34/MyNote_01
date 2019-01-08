@@ -3,7 +3,6 @@
     <string name="action_search">Search</string>
     <string name="action_filter">Filter</string>
     <string name="err_get_note_failed">Unknown error occurred</string>
-
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="note_title_hint">Insert your title</string>
@@ -15,4 +14,7 @@
     <string name="menu_task_title">Task</string>
     <string name="button_audio_title">Audio</string>
     <string name="tool_bar_title">Note</string>
+    <string name="button_add_to_widget">Add to \nwidget</string>
+    <string name="button_delete">Delete</string>
+    <string name="button_edit">Edit</string>
 </resources>
