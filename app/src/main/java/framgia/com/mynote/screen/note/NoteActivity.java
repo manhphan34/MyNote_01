@@ -21,6 +21,7 @@ import java.util.List;
 import framgia.com.mynote.R;
 import framgia.com.mynote.data.model.Note;
 import framgia.com.mynote.databinding.ActivityNoteBinding;
+import framgia.com.mynote.screen.detail_note.DetailNoteActivity;
 
 
 /**
@@ -29,7 +30,6 @@ import framgia.com.mynote.databinding.ActivityNoteBinding;
 public class NoteActivity extends AppCompatActivity {
     private NoteViewModel mViewModel;
     private ActivityNoteBinding mBinding;
-    private SearchView mSearchView;
     private List<Note> mNotes;
     private NotesAdapter mAdapter;
 
@@ -54,6 +54,12 @@ public class NoteActivity extends AppCompatActivity {
                 onGetDataFailed(s);
             }
         });
+        mViewModel.getOpenNoteEvent().observe(this, new Observer<Note>() {
+            @Override
+            public void onChanged(@Nullable Note note) {
+                openNoteDetails(note);
+            }
+        });
     }
 
     @Override
@@ -73,7 +79,7 @@ public class NoteActivity extends AppCompatActivity {
     public void initToolBar() {
         setSupportActionBar(mBinding.toolBarInclude.toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        TextView textTitle  = mBinding.toolBarInclude.textTitle;
+        TextView textTitle = mBinding.toolBarInclude.textTitle;
         textTitle.setText(getResources().getString(R.string.app_name));
     }
 
@@ -83,11 +89,15 @@ public class NoteActivity extends AppCompatActivity {
         mBinding.recyclerNote.addItemDecoration(new DividerItemDecoration(this,
                 LinearLayoutManager.VERTICAL));
         mBinding.recyclerNote.setItemAnimator(new DefaultItemAnimator());
-        mAdapter = new NotesAdapter(this, mNotes);
+        mAdapter = new NotesAdapter(this, mNotes, mViewModel);
         mBinding.recyclerNote.setAdapter(mAdapter);
     }
 
     public void onGetDataFailed(String s) {
         Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
+    }
+
+    public void openNoteDetails(Note note) {
+        startActivity(DetailNoteActivity.getDetailNoteIntent(this,note));
     }
 }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:bind="http://schemas.android.com/apk/res-auto">
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -9,148 +10,170 @@
         <variable
             name="note"
             type="framgia.com.mynote.data.model.Note" />
+
+        <variable
+            name="listener"
+            type="framgia.com.mynote.screen.note.NoteItemUserActionListener" />
     </data>
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dp_10"
-        android:padding="@dimen/dp_8">
+        android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/image_content"
-            android:layout_width="@dimen/dp_60"
-            android:layout_height="@dimen/dp_60"
-            android:layout_marginStart="@dimen/dp_8"
-            android:layout_marginTop="@dimen/dp_18"
-            android:layout_marginEnd="@dimen/dp_8"
-            bind:imageUrl="@{note.image}"
+        <com.daimajia.swipe.SwipeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             bind:layout_constraintBottom_toBottomOf="parent"
-            bind:layout_constraintEnd_toEndOf="parent"
-            bind:layout_constraintHorizontal_bias="0.025"
-            bind:layout_constraintStart_toStartOf="parent"
-            bind:layout_constraintTop_toTopOf="parent"
-            bind:layout_constraintVertical_bias="0.26" />
+            bind:layout_constraintLeft_toLeftOf="parent"
+            bind:layout_constraintRight_toRightOf="parent"
+            bind:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/text_title"
-            android:layout_width="@dimen/dp_0"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dp_8"
-            android:layout_marginTop="@dimen/dp_4"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="@{note.title}"
-            bind:layout_constraintBottom_toBottomOf="parent"
-            bind:layout_constraintEnd_toEndOf="@id/guide_line_text"
-            bind:layout_constraintHorizontal_bias="1.0"
-            bind:layout_constraintStart_toEndOf="@+id/image_content"
-            bind:layout_constraintTop_toBottomOf="@+id/image_task"
-            bind:layout_constraintVertical_bias="0.062" />
+            <include layout="@layout/swipe_button_item_note" />
 
-        <TextView
-            android:id="@+id/text_description"
-            android:layout_width="@dimen/dp_0"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dp_8"
-            android:layout_marginTop="@dimen/dp_12"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="@{note.description}"
-            bind:layout_constraintEnd_toEndOf="@id/guide_line_text"
-            bind:layout_constraintHorizontal_bias="0.0"
-            bind:layout_constraintStart_toEndOf="@+id/image_content"
-            bind:layout_constraintTop_toBottomOf="@+id/text_title" />
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_10"
+                android:onClick="@{()->listener.onNoteClicked(note)}"
+                android:padding="@dimen/dp_8">
 
-        <TextView
-            android:id="@+id/text_time"
-            android:layout_width="@dimen/dp_0"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dp_8"
-            android:layout_marginTop="@dimen/dp_8"
-            android:layout_marginBottom="@dimen/dp_16"
-            android:ellipsize="end"
-            android:maxLines="1"
-            bind:date="@{note.time}"
-            bind:layout_constraintBottom_toBottomOf="parent"
-            bind:layout_constraintEnd_toStartOf="@+id/guide_line_text"
-            bind:layout_constraintStart_toEndOf="@+id/image_content"
-            bind:layout_constraintTop_toBottomOf="@+id/text_description" />
+                <ImageView
+                    android:id="@+id/image_content"
+                    android:layout_width="@dimen/dp_60"
+                    android:layout_height="@dimen/dp_60"
+                    android:layout_marginStart="@dimen/dp_8"
+                    android:layout_marginEnd="@dimen/dp_8"
+                    bind:imageUrl="@{note.image}"
+                    bind:layout_constraintBottom_toBottomOf="parent"
+                    bind:layout_constraintEnd_toEndOf="parent"
+                    bind:layout_constraintHorizontal_bias="0.025"
+                    bind:layout_constraintStart_toStartOf="parent"
+                    bind:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/image_location"
-            android:layout_width="@dimen/dp_16"
-            android:layout_height="@dimen/dp_16"
-            android:layout_marginStart="@dimen/dp_8"
-            android:layout_marginEnd="@dimen/dp_8"
-            android:layout_marginBottom="@dimen/dp_8"
-            android:src="@drawable/ic_location_on_black_24dp"
-            bind:layout_constraintBottom_toBottomOf="parent"
-            bind:layout_constraintEnd_toStartOf="@+id/guide_line_check_box"
-            bind:layout_constraintHorizontal_bias="0.984"
-            bind:layout_constraintStart_toStartOf="parent"
-            bind:layout_constraintTop_toTopOf="parent"
-            bind:layout_constraintVertical_bias="0.0" />
+                <TextView
+                    android:id="@+id/text_title"
+                    android:layout_width="@dimen/dp_0"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dp_8"
+                    android:layout_marginTop="@dimen/dp_4"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="@{note.title}"
+                    bind:layout_constraintBottom_toBottomOf="parent"
+                    bind:layout_constraintEnd_toEndOf="@id/guide_line_text"
+                    bind:layout_constraintHorizontal_bias="0.0"
+                    bind:layout_constraintStart_toEndOf="@+id/image_content"
+                    bind:layout_constraintTop_toBottomOf="@+id/image_task"
+                    bind:layout_constraintVertical_bias="0.0" />
 
-        <ImageView
-            android:id="@+id/image_audio"
-            android:layout_width="@dimen/dp_16"
-            android:layout_height="@dimen/dp_16"
-            android:layout_marginStart="@dimen/dp_8"
-            android:layout_marginEnd="@dimen/dp_12"
-            android:layout_marginBottom="@dimen/dp_8"
-            android:src="@drawable/ic_keyboard_voice_black_24dp"
-            android:visibility="@{note.audio != null ? View.VISIBLE: View.GONE}"
-            bind:layout_constraintBottom_toBottomOf="parent"
-            bind:layout_constraintEnd_toStartOf="@+id/image_location"
-            bind:layout_constraintHorizontal_bias="1.0"
-            bind:layout_constraintStart_toStartOf="parent"
-            bind:layout_constraintTop_toTopOf="parent"
-            bind:layout_constraintVertical_bias="0.0" />
+                <TextView
+                    android:id="@+id/text_description"
+                    android:layout_width="@dimen/dp_0"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dp_8"
+                    android:layout_marginTop="@dimen/dp_8"
+                    android:layout_marginBottom="@dimen/dp_8"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="@{note.description}"
+                    bind:layout_constraintBottom_toBottomOf="parent"
+                    bind:layout_constraintEnd_toEndOf="@id/guide_line_text"
+                    bind:layout_constraintHorizontal_bias="1.0"
+                    bind:layout_constraintStart_toEndOf="@+id/image_content"
+                    bind:layout_constraintTop_toBottomOf="@+id/text_title"
+                    bind:layout_constraintVertical_bias="0.0" />
 
-        <ImageView
-            android:id="@+id/image_task"
-            android:layout_width="@dimen/dp_16"
-            android:layout_height="@dimen/dp_16"
-            android:layout_marginStart="@dimen/dp_8"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="@dimen/dp_8"
-            android:layout_marginBottom="@dimen/dp_8"
-            android:src="@drawable/ic_view_list_black_24dp"
-            android:visibility="@{note.hasTask == 0 ? View.VISIBLE : View.INVISIBLE}"
-            bind:layout_constraintBottom_toBottomOf="parent"
-            bind:layout_constraintEnd_toStartOf="@+id/image_audio"
-            bind:layout_constraintHorizontal_bias="0.975"
-            bind:layout_constraintStart_toStartOf="parent"
-            bind:layout_constraintTop_toTopOf="parent"
-            bind:layout_constraintVertical_bias="0.15" />
+                <TextView
+                    android:id="@+id/text_time"
+                    android:layout_width="@dimen/dp_0"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dp_8"
+                    android:layout_marginTop="@dimen/dp_8"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    bind:date="@{note.time}"
+                    bind:layout_constraintBottom_toBottomOf="parent"
+                    bind:layout_constraintEnd_toStartOf="@+id/guide_line_text"
+                    bind:layout_constraintHorizontal_bias="1.0"
+                    bind:layout_constraintStart_toEndOf="@+id/image_content"
+                    bind:layout_constraintTop_toBottomOf="@+id/text_description"
+                    bind:layout_constraintVertical_bias="0.0" />
 
-        <android.support.constraint.Guideline
-            android:id="@+id/guide_line_check_box"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            bind:layout_constraintGuide_percent="0.96" />
+                <ImageView
+                    android:id="@+id/image_location"
+                    android:layout_width="@dimen/dp_16"
+                    android:layout_height="@dimen/dp_16"
+                    android:layout_marginStart="@dimen/dp_8"
+                    android:layout_marginEnd="@dimen/dp_8"
+                    android:layout_marginBottom="@dimen/dp_8"
+                    android:src="@drawable/ic_location_on_black_24dp"
+                    bind:layout_constraintBottom_toBottomOf="parent"
+                    bind:layout_constraintEnd_toStartOf="@+id/guide_line_check_box"
+                    bind:layout_constraintHorizontal_bias="0.984"
+                    bind:layout_constraintStart_toStartOf="parent"
+                    bind:layout_constraintTop_toTopOf="parent"
+                    bind:layout_constraintVertical_bias="0.0" />
 
-        <android.support.constraint.Guideline
-            android:id="@+id/guide_line_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            bind:layout_constraintGuide_percent="0.84" />
+                <ImageView
+                    android:id="@+id/image_audio"
+                    android:layout_width="@dimen/dp_16"
+                    android:layout_height="@dimen/dp_16"
+                    android:layout_marginStart="@dimen/dp_8"
+                    android:layout_marginEnd="@dimen/dp_12"
+                    android:layout_marginBottom="@dimen/dp_8"
+                    android:src="@drawable/ic_keyboard_voice_black_24dp"
+                    android:visibility="@{note.audio != null ? View.VISIBLE: View.GONE}"
+                    bind:layout_constraintBottom_toBottomOf="parent"
+                    bind:layout_constraintEnd_toStartOf="@+id/image_location"
+                    bind:layout_constraintHorizontal_bias="1.0"
+                    bind:layout_constraintStart_toStartOf="parent"
+                    bind:layout_constraintTop_toTopOf="parent"
+                    bind:layout_constraintVertical_bias="0.0" />
 
-        <CheckBox
-            android:id="@+id/check_box_done"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dp_8"
-            android:layout_marginTop="@dimen/dp_8"
-            android:layout_marginEnd="@dimen/dp_8"
-            android:layout_marginBottom="@dimen/dp_8"
-            bind:layout_constraintBottom_toBottomOf="parent"
-            bind:layout_constraintEnd_toStartOf="@+id/guide_line_check_box"
-            bind:layout_constraintHorizontal_bias="0.0"
-            bind:layout_constraintStart_toStartOf="@+id/guide_line_text"
-            bind:layout_constraintTop_toBottomOf="@+id/image_location" />
+                <ImageView
+                    android:id="@+id/image_task"
+                    android:layout_width="@dimen/dp_16"
+                    android:layout_height="@dimen/dp_16"
+                    android:layout_marginStart="@dimen/dp_8"
+                    android:layout_marginEnd="@dimen/dp_8"
+                    android:layout_marginBottom="@dimen/dp_8"
+                    android:src="@drawable/ic_view_list_black_24dp"
+                    android:visibility="@{note.hasTask == 0 ? View.VISIBLE : View.INVISIBLE}"
+                    bind:layout_constraintBottom_toBottomOf="parent"
+                    bind:layout_constraintEnd_toStartOf="@+id/image_audio"
+                    bind:layout_constraintHorizontal_bias="1.0"
+                    bind:layout_constraintStart_toStartOf="parent"
+                    bind:layout_constraintTop_toTopOf="parent"
+                    bind:layout_constraintVertical_bias="0.0" />
+
+                <android.support.constraint.Guideline
+                    android:id="@+id/guide_line_check_box"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    bind:layout_constraintGuide_percent="0.96" />
+
+                <android.support.constraint.Guideline
+                    android:id="@+id/guide_line_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    bind:layout_constraintGuide_percent="0.84" />
+
+                <CheckBox
+                    android:id="@+id/check_box_done"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dp_8"
+                    android:layout_marginTop="@dimen/dp_8"
+                    android:layout_marginEnd="@dimen/dp_8"
+                    android:layout_marginBottom="@dimen/dp_8"
+                    bind:layout_constraintBottom_toBottomOf="parent"
+                    bind:layout_constraintEnd_toEndOf="parent"
+                    bind:layout_constraintStart_toStartOf="@+id/guide_line_text"
+                    bind:layout_constraintTop_toTopOf="parent" />
+            </android.support.constraint.ConstraintLayout>
+        </com.daimajia.swipe.SwipeLayout>
+
     </android.support.constraint.ConstraintLayout>
 </layout>

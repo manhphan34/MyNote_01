@@ -25,9 +25,10 @@ import io.reactivex.schedulers.Schedulers;
 public class NoteViewModel extends AndroidViewModel {
     private NoteRepository mRepository;
     private MutableLiveData<List<Note>> mNotes;
-    private MutableLiveData<String> mErrorMessage;
+    private SingleLiveEvent<String> mErrorMessage = new SingleLiveEvent<>();
     private CompositeDisposable mCompositeDisposable;
     private NoteDatabase mNoteDatabase;
+    private SingleLiveEvent<Note> mOpenNoteEvent = new SingleLiveEvent<>();
 
     public NoteViewModel(@NonNull Application application) {
         super(application);
@@ -46,11 +47,12 @@ public class NoteViewModel extends AndroidViewModel {
         return mNotes;
     }
 
-    public MutableLiveData<String> getErrorMessage() {
-        if (mErrorMessage == null) {
-            mErrorMessage = new MutableLiveData<>();
-        }
+    public SingleLiveEvent<String> getErrorMessage() {
         return mErrorMessage;
+    }
+
+    public SingleLiveEvent<Note> getOpenNoteEvent() {
+        return mOpenNoteEvent;
     }
 
     public void getAllNote() {
