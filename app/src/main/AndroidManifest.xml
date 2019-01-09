@@ -10,7 +10,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".screen.note.NoteActivity">
+        <activity android:name=".screen.note.NoteActivity" />
+        <activity android:name=".screen.edit.NoteUpdateActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -18,7 +19,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".screen.detail_note.DetailNoteActivity" />
-        <activity android:name=".screen.edit.NoteUpdateActivity" />
     </application>
 
 </manifest>
