@@ -28,7 +28,9 @@
             bind:layout_constraintRight_toRightOf="parent"
             bind:layout_constraintTop_toTopOf="parent">
 
-            <include layout="@layout/swipe_button_item_note" />
+            <include
+                android:id="@+id/swipe_button_item_note_include"
+                layout="@layout/swipe_button_item_note" />
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"

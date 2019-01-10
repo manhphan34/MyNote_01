@@ -17,4 +17,5 @@
     <string name="button_add_to_widget">Add to \nwidget</string>
     <string name="button_delete">Delete</string>
     <string name="button_edit">Edit</string>
+    <string name="msg_delete_note_success">Delete note success !!!</string>
 </resources>
