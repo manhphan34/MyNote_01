@@ -7,10 +7,14 @@ import android.support.annotation.NonNull;
 
 import java.util.List;
 
+import framgia.com.mynote.R;
 import framgia.com.mynote.data.model.Note;
 import framgia.com.mynote.data.repository.NoteRepository;
 import framgia.com.mynote.data.source.local.note.NoteDatabase;
 import framgia.com.mynote.data.source.local.note.NoteLocalDataSource;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -29,6 +33,10 @@ public class NoteViewModel extends AndroidViewModel {
     private CompositeDisposable mCompositeDisposable;
     private NoteDatabase mNoteDatabase;
     private SingleLiveEvent<Note> mOpenNoteEvent = new SingleLiveEvent<>();
+    private SingleLiveEvent<Note> mDeleteNoteEvent = new SingleLiveEvent<>();
+    private SingleLiveEvent<Note> mEditNoteEvent = new SingleLiveEvent<>();
+    private SingleLiveEvent<Note> mAddNoteToHomeScreenEvent = new SingleLiveEvent<>();
+    private SingleLiveEvent<String> mSuccessMessage = new SingleLiveEvent<>();
 
     public NoteViewModel(@NonNull Application application) {
         super(application);
@@ -55,6 +63,22 @@ public class NoteViewModel extends AndroidViewModel {
         return mOpenNoteEvent;
     }
 
+    public SingleLiveEvent<Note> getDeleteNoteEvent() {
+        return mDeleteNoteEvent;
+    }
+
+    public SingleLiveEvent<Note> getEditNoteEvent() {
+        return mEditNoteEvent;
+    }
+
+    public SingleLiveEvent<Note> getAddNoteToHomeScreenEvent() {
+        return mAddNoteToHomeScreenEvent;
+    }
+
+    public SingleLiveEvent<String> getSuccessMessage() {
+        return mSuccessMessage;
+    }
+
     public void getAllNote() {
         Disposable disposable = mRepository.getNotes()
                 .observeOn(AndroidSchedulers.mainThread())
@@ -77,5 +101,38 @@ public class NoteViewModel extends AndroidViewModel {
         if (mCompositeDisposable.isDisposed()) {
             mCompositeDisposable.dispose();
         }
+    }
+
+    public void deleteNote(final Note note) {
+        Observable<Boolean> deleteTask = Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(ObservableEmitter<Boolean> emitter) throws Exception {
+                mRepository.deleteAllTaskOfNote(note.getId());
+                emitter.onNext(true);
+                emitter.onComplete();
+            }
+        });
+        Observable<Boolean> deleteNote = Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(ObservableEmitter<Boolean> emitter) throws Exception {
+                mRepository.deleteNote(note);
+                emitter.onNext(true);
+            }
+        });
+        Observable.merge(deleteTask, deleteNote)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Consumer<Boolean>() {
+                    @Override
+                    public void accept(Boolean aBoolean) throws Exception {
+                        mSuccessMessage.setValue(getApplication().
+                                getResources().getString(R.string.msg_delete_note_success));
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        mErrorMessage.setValue(throwable.getMessage());
+                    }
+                });
     }
 }

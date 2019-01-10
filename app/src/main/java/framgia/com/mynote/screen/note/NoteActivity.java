@@ -22,6 +22,7 @@ import framgia.com.mynote.R;
 import framgia.com.mynote.data.model.Note;
 import framgia.com.mynote.databinding.ActivityNoteBinding;
 import framgia.com.mynote.screen.detail_note.DetailNoteActivity;
+import framgia.com.mynote.screen.edit.NoteUpdateActivity;
 
 
 /**
@@ -42,24 +43,7 @@ public class NoteActivity extends AppCompatActivity {
         mBinding.setViewModel(mViewModel);
         initToolBar();
         initRecyclerView();
-        mViewModel.getNotes().observe(this, new Observer<List<Note>>() {
-            @Override
-            public void onChanged(@Nullable List<Note> notes) {
-                mAdapter.addData(notes);
-            }
-        });
-        mViewModel.getErrorMessage().observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                onGetDataFailed(s);
-            }
-        });
-        mViewModel.getOpenNoteEvent().observe(this, new Observer<Note>() {
-            @Override
-            public void onChanged(@Nullable Note note) {
-                openNoteDetails(note);
-            }
-        });
+        initMutableLiveData();
     }
 
     @Override
@@ -93,11 +77,60 @@ public class NoteActivity extends AppCompatActivity {
         mBinding.recyclerNote.setAdapter(mAdapter);
     }
 
-    public void onGetDataFailed(String s) {
+    public void initMutableLiveData() {
+        mViewModel.getNotes().observe(this, new Observer<List<Note>>() {
+            @Override
+            public void onChanged(@Nullable List<Note> notes) {
+                mAdapter.addData(notes);
+            }
+        });
+        mViewModel.getErrorMessage().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(@Nullable String s) {
+                showToast(s);
+            }
+        });
+        mViewModel.getSuccessMessage().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(@Nullable String s) {
+                showToast(s);
+            }
+        });
+        mViewModel.getOpenNoteEvent().observe(this, new Observer<Note>() {
+            @Override
+            public void onChanged(@Nullable Note note) {
+                openNoteDetails(note);
+            }
+        });
+        mViewModel.getDeleteNoteEvent().observe(this, new Observer<Note>() {
+            @Override
+            public void onChanged(@Nullable Note note) {
+
+            }
+        });
+        mViewModel.getEditNoteEvent().observe(this, new Observer<Note>() {
+            @Override
+            public void onChanged(@Nullable Note note) {
+                openNoteUpdate(note);
+            }
+        });
+        mViewModel.getAddNoteToHomeScreenEvent().observe(this, new Observer<Note>() {
+            @Override
+            public void onChanged(@Nullable Note note) {
+
+            }
+        });
+    }
+
+    public void showToast(String s) {
         Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
     }
 
     public void openNoteDetails(Note note) {
-        startActivity(DetailNoteActivity.getDetailNoteIntent(this,note));
+        startActivity(DetailNoteActivity.getDetailNoteIntent(this, note));
+    }
+
+    public void openNoteUpdate(Note note) {
+        startActivity(NoteUpdateActivity.getUpdateActivity(this, note));
     }
 }

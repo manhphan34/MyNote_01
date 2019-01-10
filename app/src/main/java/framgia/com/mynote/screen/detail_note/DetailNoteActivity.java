@@ -2,8 +2,8 @@ package framgia.com.mynote.screen.detail_note;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 import framgia.com.mynote.R;
 import framgia.com.mynote.data.model.Note;
@@ -17,6 +17,7 @@ public class DetailNoteActivity extends AppCompatActivity {
         intent.putExtra(EXTRA_NOTE, note);
         return intent;
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -6,6 +6,8 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 
 import java.util.List;
 
@@ -30,13 +32,14 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
         ItemNoteBinding binding = DataBindingUtil.
                 inflate(mInflater, R.layout.item_note, viewGroup, false);
         binding.setListener(this);
+        binding.swipeButtonItemNoteInclude.setListener(this);
         return new ViewHolder(binding);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         viewHolder.mBinding.setNote(mNotes.get(i));
-
+        viewHolder.mBinding.swipeButtonItemNoteInclude.setNote(mNotes.get(i));
     }
 
     @Override
@@ -56,6 +59,22 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
     @Override
     public void onNoteClicked(Note note) {
         mNoteViewModel.getOpenNoteEvent().setValue(note);
+    }
+
+    @Override
+    public void onEditClicked(Note note) {
+        mNoteViewModel.getEditNoteEvent().setValue(note);
+    }
+
+    @Override
+    public void onDeleteClicked(Note note) {
+        mNoteViewModel.getDeleteNoteEvent().setValue(note);
+        mNoteViewModel.deleteNote(note);
+    }
+
+    @Override
+    public void onAddToWidgetClicked(Note note) {
+        mNoteViewModel.getAddNoteToHomeScreenEvent().setValue(note);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
