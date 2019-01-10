@@ -51,7 +51,20 @@ public class NoteActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.activity_note, menu);
         MenuItem searchItem = menu.findItem(R.id.search_home);
         SearchView searchView = (SearchView) searchItem.getActionView();
-        return super.onCreateOptionsMenu(menu);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                mViewModel.getNotesByKey(s);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                mViewModel.getNotesByKey(s);
+                return false;
+            }
+        });
+        return true;
     }
 
     @Override
