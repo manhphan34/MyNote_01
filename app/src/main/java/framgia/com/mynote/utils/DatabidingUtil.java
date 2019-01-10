@@ -2,12 +2,15 @@ package framgia.com.mynote.utils;
 
 import android.databinding.BindingAdapter;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+
+import framgia.com.mynote.R;
 
 public class DatabidingUtil {
 
@@ -22,6 +25,14 @@ public class DatabidingUtil {
     @BindingAdapter("date")
     public static void setTime(TextView textView, long time) {
         textView.setText(DateTimeUtil.convertLongToDate(time));
+    }
+
+    @BindingAdapter("setDate")
+    public static void showTime(TextView textView, long time) {
+        textView.setText(textView.getContext()
+                .getResources()
+                .getString(R.string.alarm_content)
+                .concat(DateTimeUtil.convertLongToDate(time)));
     }
 
     @BindingAdapter("setAdapter")
