@@ -135,4 +135,27 @@ public class NoteViewModel extends AndroidViewModel {
                     }
                 });
     }
+
+    public void getNotesByKey(String s) {
+        String percentChar = getApplication()
+                .getResources()
+                .getString(R.string.char_percent);
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(percentChar).append(s).append(percentChar);
+        Disposable disposable = mRepository.getNotesByKey(stringBuilder.toString())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Consumer<List<Note>>() {
+                    @Override
+                    public void accept(List<Note> notes) {
+                        mNotes.setValue(notes);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        mErrorMessage.setValue(throwable.getMessage());
+                    }
+                });
+        mCompositeDisposable.add(disposable);
+    }
 }
