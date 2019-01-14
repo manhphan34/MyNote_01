@@ -5,11 +5,17 @@ import android.databinding.ObservableBoolean;
 import android.media.MediaPlayer;
 
 public interface HandlerClick {
-    interface AudioHandleClick {
+    interface AudioHandledClickListener {
         void onPlayAudio();
 
         void onPlayAudioFailed();
 
         void onStopAudio();
+    }
+
+    interface ImageHandledClickListener {
+        void onChooseImageFromGallery();
+
+        void onCreateNewImage();
     }
 }

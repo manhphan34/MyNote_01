@@ -29,4 +29,8 @@
     <string name="text_title">Title</string>
     <string name="text_location">Location</string>
     <string name="text_audio_record">Audio Record</string>
+    <string name="permission_granted_fail">You must granted permission for this option !</string>
+    <string name="button_gallery_title">Gallery</string>
+    <string name="button_create_new_file">Create</string>
+    <string name="error_system_busy">The system is busy. Please try again !</string>
 </resources>

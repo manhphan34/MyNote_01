@@ -1,19 +1,14 @@
 package framgia.com.mynote.screen.edit;
 
-import android.content.Context;
-import android.widget.Toast;
-
-import framgia.com.mynote.R;
 import framgia.com.mynote.data.model.Note;
-import framgia.com.mynote.databinding.ActivityNoteDetailBinding;
 import framgia.com.mynote.utils.Media;
 
 public class MediaNoteUpdate {
     private Note mNote;
     private Media mMedia;
-    private HandlerClick.AudioHandleClick mHandleClick;
+    private HandlerClick.AudioHandledClickListener mHandleClick;
 
-    public MediaNoteUpdate(Note note, HandlerClick.AudioHandleClick handlerClick) {
+    public MediaNoteUpdate(Note note, HandlerClick.AudioHandledClickListener handlerClick) {
         super();
         mHandleClick = handlerClick;
         mNote = note;

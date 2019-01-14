@@ -144,6 +144,6 @@ public class NoteActivity extends AppCompatActivity {
     }
 
     public void openNoteUpdate(Note note) {
-        startActivity(NoteUpdateActivity.getUpdateActivity(this, note));
+        startActivity(NoteUpdateActivity.getIntent(this, note));
     }
 }
