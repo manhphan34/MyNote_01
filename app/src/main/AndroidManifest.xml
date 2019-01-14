@@ -9,7 +9,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity android:name=".screen.note.NoteActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,6 +18,16 @@
         </activity>
         <activity android:name=".screen.edit.NoteUpdateActivity" />
         <activity android:name=".screen.detail_note.DetailNoteActivity" />
+
+        <receiver android:name=".widget.NoteAppWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/note_app_widget_info" />
+        </receiver>
     </application>
 
 </manifest>
