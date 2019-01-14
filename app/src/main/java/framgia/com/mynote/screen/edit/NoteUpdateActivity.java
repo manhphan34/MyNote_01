@@ -27,15 +27,19 @@ import java.util.Calendar;
 import framgia.com.mynote.R;
 import framgia.com.mynote.data.model.Note;
 import framgia.com.mynote.databinding.ActivityNoteDetailBinding;
+import framgia.com.mynote.screen.edit.dialog.DatePickerDialog;
 import framgia.com.mynote.screen.edit.dialog.ImageChooserDialog;
 import framgia.com.mynote.screen.edit.dialog.LocationChooserDialog;
+import framgia.com.mynote.screen.edit.dialog.TimePickerDialog;
+import framgia.com.mynote.utils.DateTimeUtil;
 import framgia.com.mynote.utils.FileHelper;
 import framgia.com.mynote.utils.KeyUtils;
 import framgia.com.mynote.utils.Permission;
 
 public class NoteUpdateActivity extends AppCompatActivity implements HandlerClick.AudioHandledClickListener,
         BottomNavigationView.OnNavigationItemSelectedListener, HandlerClick.ImageHandledClickListener,
-        HandlerClick.LocationHandledListener {
+        HandlerClick.LocationHandledListener, HandlerClick.DatePickerHandledClickListener,
+        HandlerClick.TimePickerHandledClickListener {
     public static final String EXTRA_NOTE = "EXTRA_NOTE";
     public static final float TEXT_TOOL_BAR_SIZE = 18;
     public static final int PICK_IMAGE_FROM_GALLERY = 0x248;
@@ -50,6 +54,7 @@ public class NoteUpdateActivity extends AppCompatActivity implements HandlerClic
     private MediaNoteUpdate mMedia;
     private ImageChooserDialog mOptionImage;
     private LocationChooserDialog mLocationDialog;
+    private TimePickerDialog mTimePickerDialog;
 
     public static Intent getIntent(Context context, Note note) {
         Intent intent = new Intent(context, NoteUpdateActivity.class);
@@ -122,6 +127,8 @@ public class NoteUpdateActivity extends AppCompatActivity implements HandlerClic
             case R.id.navigation_location:
                 requestPermissionLocation();
             case R.id.navigation_alarm:
+                DatePickerDialog datePickerDialog = new DatePickerDialog(getApplicationContext(), this);
+                datePickerDialog.showDialog();
                 break;
         }
         return false;
@@ -173,7 +180,7 @@ public class NoteUpdateActivity extends AppCompatActivity implements HandlerClic
 
     @Override
     public void onGetLocationSuccess(String location) {
-        mLocationDialog.dissmiss();
+        mLocationDialog.dismiss();
         mUpdateViewModel.getLocation().setValue(location);
     }
 
@@ -200,7 +207,7 @@ public class NoteUpdateActivity extends AppCompatActivity implements HandlerClic
             File file = initFile();
             fileHelper.createFile(file);
             fileHelper.writeFileImage(file, bitmap);
-            mOptionImage.dissmiss();
+            mOptionImage.dismiss();
             mUpdateViewModel.getImage().setValue(file.getPath());
         } catch (IOException e) {
             onSaveImageFail();
@@ -224,7 +231,7 @@ public class NoteUpdateActivity extends AppCompatActivity implements HandlerClic
 
     private void initView() {
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_note_detail);
-        mMedia = new MediaNoteUpdate(mNote, this);
+        mMedia = new MediaNoteUpdate(this, mNote, this);
         initToolbar(mBinding);
         mUpdateViewModel = ViewModelProviders.of(this).get(NoteUpdateViewModel.class);
         mBinding.bottomNavigation.setOnNavigationItemSelectedListener(this);
@@ -282,5 +289,32 @@ public class NoteUpdateActivity extends AppCompatActivity implements HandlerClic
     private File initFile() {
         return new File(KeyUtils.PATH_FOLDER_IMAGE,
                 Calendar.getInstance().getTimeInMillis() + KeyUtils.EXTEND_IMAGE);
+    }
+
+    @Override
+    public void onChooseDate(long time) {
+        mTimePickerDialog = new TimePickerDialog(this, this);
+        mTimePickerDialog.showDialog();
+        mUpdateViewModel.getTime().setValue(time);
+    }
+
+    @Override
+    public void onChooseDateError(Exception e) {
+        Toast.makeText(this, R.string.error_system_busy, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onChooseHour(long time) {
+        mTimePickerDialog.dismiss();
+        mUpdateViewModel.getTime().setValue(getTime(mUpdateViewModel.getTime().getValue() + time));
+    }
+
+    @Override
+    public void onChooseHourError(Exception e) {
+        Toast.makeText(this, R.string.error_system_busy, Toast.LENGTH_SHORT).show();
+    }
+
+    private long getTime(long time) {
+        return time + DateTimeUtil.TIME_COMPENSATION;
     }
 }

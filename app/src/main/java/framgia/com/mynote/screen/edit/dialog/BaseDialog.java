@@ -8,8 +8,11 @@ import framgia.com.mynote.utils.DialogHelper;
 
 public abstract class BaseDialog {
     protected DialogHelper mDialogHelper;
+    protected Context mContext;
 
     public abstract void setLocation();
+
+    public abstract void showDialog();
 
     public void init(double w, double h) {
         mDialogHelper.initDialog(w, h);
@@ -19,7 +22,7 @@ public abstract class BaseDialog {
         mDialogHelper.show();
     }
 
-    public void dissmiss() {
+    public void dismiss() {
         mDialogHelper.dismiss();
     }
 }
