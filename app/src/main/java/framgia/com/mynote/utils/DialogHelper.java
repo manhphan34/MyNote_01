@@ -55,6 +55,10 @@ public class DialogHelper {
         }
     }
 
+    public Activity getActivity(){
+        return mDialog.getOwnerActivity();
+    }
+
     public void setView(View view) {
         mDialog.setContentView(view);
     }

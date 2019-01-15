@@ -8,6 +8,7 @@ import android.support.v4.app.ActivityCompat;
 public class Permission {
     public static final int REQUEST_RECORD_AUDIO_PERMISSION = 0xc8;
     public static final int REQUEST_RECORD_IMAGE_PERMISSION = 0xc9;
+    public static final int REQUEST_LOCATION_PERMISSION = 0xca;
     private Activity mActivity;
     private static final String[] RECORD_AUDIO_PERMISSION = {
             Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -18,6 +19,11 @@ public class Permission {
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.CAMERA
+    };
+
+    private static final String[] LOCATION_PERMISSION = {
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION
     };
 
     public Permission(Activity activity) {
@@ -39,6 +45,15 @@ public class Permission {
         }
         return false;
     }
+
+    public boolean requestPermissionLocation() {
+        if (isCheckSelfPermission(LOCATION_PERMISSION)) {
+            requestPermission(LOCATION_PERMISSION, REQUEST_LOCATION_PERMISSION);
+            return true;
+        }
+        return false;
+    }
+
 
     private boolean isCheckSelfPermission(String... permissions) {
         if (mActivity != null && permissions != null) {

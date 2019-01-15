@@ -21,7 +21,7 @@
     <string name="audio_load_fail">Play audio failed ! Please try again</string>
     <string name="audio_title">Audio :</string>
     <string name="alarm_content">-- at&#160;</string>
-    <string name="location_content">on %s;</string>
+    <string name="location_content">on %s</string>
     <string name="char_percent">%</string>
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
@@ -33,4 +33,10 @@
     <string name="button_gallery_title">Gallery</string>
     <string name="button_create_new_file">Create</string>
     <string name="error_system_busy">The system is busy. Please try again !</string>
+    <string name="location_insert_hint">Insert your location</string>
+    <string name="location_submit">OK</string>
+    <string name="button_get_curent_location_title">Get current location</string>
+    <string name="message_turn_on">Turn on GPS please !</string>
+    <string name="message_turn_on_internet">Turn on internet please !</string>
+    <string name="error_location_null">Location must not null . Please insert your location</string>
 </resources>

@@ -1,6 +1,7 @@
 package framgia.com.mynote.screen.edit;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.arch.persistence.room.PrimaryKey;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -18,6 +19,8 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
@@ -26,12 +29,14 @@ import framgia.com.mynote.R;
 import framgia.com.mynote.data.model.Note;
 import framgia.com.mynote.databinding.ActivityNoteDetailBinding;
 import framgia.com.mynote.screen.edit.dialog.ImageChooserDialog;
+import framgia.com.mynote.screen.edit.dialog.LocationChooserDialog;
 import framgia.com.mynote.utils.FileHelper;
 import framgia.com.mynote.utils.KeyUtils;
 import framgia.com.mynote.utils.Permission;
 
 public class NoteUpdateActivity extends AppCompatActivity implements HandlerClick.AudioHandledClickListener,
-        BottomNavigationView.OnNavigationItemSelectedListener, HandlerClick.ImageHandledClickListener {
+        BottomNavigationView.OnNavigationItemSelectedListener, HandlerClick.ImageHandledClickListener,
+        HandlerClick.LocationHandledListener {
     public static final String EXTRA_NOTE = "EXTRA_NOTE";
     public static final float TEXT_TOOL_BAR_SIZE = 18;
     public static final int PICK_IMAGE_FROM_GALLERY = 0x248;
@@ -45,6 +50,7 @@ public class NoteUpdateActivity extends AppCompatActivity implements HandlerClic
     private Note mNote;
     private MediaNoteUpdate mMedia;
     private ImageChooserDialog mOptionImage;
+    private LocationChooserDialog mLocationDialog;
 
     public static Intent getIntent(Context context, Note note) {
         Intent intent = new Intent(context, NoteUpdateActivity.class);
@@ -100,6 +106,9 @@ public class NoteUpdateActivity extends AppCompatActivity implements HandlerClic
                 case Permission.REQUEST_RECORD_IMAGE_PERMISSION:
                     mOptionImage.showDialog();
                     return;
+                case Permission.REQUEST_LOCATION_PERMISSION:
+                    mLocationDialog.showDialog();
+                    return;
             }
         }
         onPermissionFail();
@@ -110,6 +119,9 @@ public class NoteUpdateActivity extends AppCompatActivity implements HandlerClic
         switch (menuItem.getItemId()) {
             case R.id.navigation_image:
                 requestPermissionImage();
+                break;
+            case R.id.navigation_location:
+                requestPermissionLocation();
                 break;
         }
         return false;
@@ -149,6 +161,32 @@ public class NoteUpdateActivity extends AppCompatActivity implements HandlerClic
         }
     }
 
+    @Override
+    public void onGPSTurnOff() {
+        Toast.makeText(getApplicationContext(), getString(R.string.message_turn_on), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onNetWorkTurnOff() {
+        Toast.makeText(getApplicationContext(), getString(R.string.message_turn_on_internet), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onGetLocationSuccess(String location) {
+        mLocationDialog.dissmiss();
+        mUpdateViewModel.getLocation().setValue(location);
+    }
+
+    @Override
+    public void onGEtLocationFail(Exception e) {
+        Toast.makeText(getApplicationContext(), R.string.error_system_busy, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onLocationEmpty() {
+        Toast.makeText(getApplicationContext(), getString(R.string.error_location_null), Toast.LENGTH_SHORT).show();
+    }
+
     private void pickImage(Bitmap bitmap) {
         saveImage(bitmap);
     }
@@ -160,6 +198,7 @@ public class NoteUpdateActivity extends AppCompatActivity implements HandlerClic
                 fileHelper.deleteFile(new File(mUpdateViewModel.getImage().getValue()));
             }
             File file = initFile();
+            fileHelper.createFile(file);
             fileHelper.writeFileImage(file, bitmap);
             mOptionImage.dissmiss();
             mUpdateViewModel.getImage().setValue(file.getPath());
@@ -191,6 +230,8 @@ public class NoteUpdateActivity extends AppCompatActivity implements HandlerClic
         mBinding.bottomNavigation.setOnNavigationItemSelectedListener(this);
         mBinding.setLifecycleOwner(this);
         mOptionImage = new ImageChooserDialog(this, this);
+        FusedLocationProviderClient providerClient = new FusedLocationProviderClient(this);
+        mLocationDialog = new LocationChooserDialog(this, this, providerClient);
     }
 
     private void initData() {
@@ -224,6 +265,13 @@ public class NoteUpdateActivity extends AppCompatActivity implements HandlerClic
         Permission permission = new Permission(this);
         if (!permission.requestPermissionImage()) {
             mOptionImage.showDialog();
+        }
+    }
+
+    private void requestPermissionLocation() {
+        Permission permission = new Permission(this);
+        if (!permission.requestPermissionLocation()) {
+            mLocationDialog.showDialog();
         }
     }
 

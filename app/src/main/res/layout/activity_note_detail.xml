@@ -85,6 +85,7 @@
                     android:layout_width="@dimen/dp_0"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dp_8"
+                    android:visibility="@{safeUnbox(viewModel.hasTask) == 1 ? View.INVISIBLE : View.GONE}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/text_note_description" />
@@ -97,7 +98,7 @@
                     android:layout_marginStart="@dimen/dp_4"
                     android:layout_marginTop="@dimen/dp_8"
                     android:layout_marginEnd="@dimen/dp_16"
-                    android:visibility="@{safeUnbox(viewModel.time) > 0 ? View.VISIBLE : View.INVISIBLE}"
+                    android:visibility="@{safeUnbox(viewModel.time) > 0 ? View.VISIBLE : View.GONE}"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/frame_tasks"
@@ -106,11 +107,13 @@
                 <TextView
                     android:id="@+id/text_note_location"
                     style="@style/TextShowInformation"
-                    android:layout_width="wrap_content"
+                    android:layout_width="@dimen/dp_0"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dp_8"
+                    android:layout_marginEnd="@dimen/dp_8"
                     android:text="@{@string/location_content(viewModel.location)}"
-                    android:visibility="@{viewModel.location != null ? View.VISIBLE : View.INVISIBLE}"
+                    android:visibility="@{viewModel.location != null ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/text_note_alarm"
                     app:layout_constraintTop_toBottomOf="@+id/frame_tasks"
                     bind:style="@style/TextShowInformation" />
@@ -151,7 +154,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/image_button_speaker"/>
+                    app:layout_constraintTop_toBottomOf="@+id/image_button_speaker" />
 
             </android.support.constraint.ConstraintLayout>
 

@@ -18,4 +18,16 @@ public interface HandlerClick {
 
         void onCreateNewImage();
     }
+
+    interface LocationHandledListener {
+        void onGPSTurnOff();
+
+        void onNetWorkTurnOff();
+
+        void onGetLocationSuccess(String location);
+
+        void onGEtLocationFail(Exception e);
+
+        void onLocationEmpty();
+    }
 }
