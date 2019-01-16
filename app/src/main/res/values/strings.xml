@@ -39,4 +39,6 @@
     <string name="message_turn_on">Turn on GPS please !</string>
     <string name="message_turn_on_internet">Turn on internet please !</string>
     <string name="error_location_null">Location must not null . Please insert your location</string>
+    <string name="channel_name">note</string>
+    <string name="channel_description">this is channel of note</string>
 </resources>
