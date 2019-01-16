@@ -1,7 +1,6 @@
 package framgia.com.mynote.screen.edit;
 
 import android.arch.lifecycle.ViewModelProviders;
-import android.arch.persistence.room.PrimaryKey;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -122,6 +121,7 @@ public class NoteUpdateActivity extends AppCompatActivity implements HandlerClic
                 break;
             case R.id.navigation_location:
                 requestPermissionLocation();
+            case R.id.navigation_alarm:
                 break;
         }
         return false;
