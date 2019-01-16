@@ -49,4 +49,12 @@
         <item name="android:layout_marginBottom">@dimen/dp_8</item>
         <item name="cardCornerRadius">@dimen/dp_5</item>
     </style>
+
+    <style name="ButtonDialog">
+        <item name="android:padding">@dimen/dp_2</item>
+        <item name="android:background">@drawable/border_button_dialog</item>
+        <item name="android:fontFamily">serif</item>
+        <item name="android:textColor">@color/color_light_pink</item>
+        <item name="android:textStyle">bold</item>
+    </style>
 </resources>
