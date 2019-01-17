@@ -41,4 +41,6 @@
     <string name="error_location_null">Location must not null . Please insert your location</string>
     <string name="channel_name">note</string>
     <string name="channel_description">this is channel of note</string>
+    <string name="msg_delete_task">Delete Task</string>
+    <string name="msg_success"> success !!!</string>
 </resources>

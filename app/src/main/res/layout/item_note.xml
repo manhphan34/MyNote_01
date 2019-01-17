@@ -140,7 +140,7 @@
                     android:layout_marginEnd="@dimen/dp_8"
                     android:layout_marginBottom="@dimen/dp_8"
                     android:src="@drawable/ic_view_list_black_24dp"
-                    android:visibility="@{note.hasTask == 0 ? View.VISIBLE : View.INVISIBLE}"
+                    android:visibility="@{note.hasTask == 1 ? View.VISIBLE : View.INVISIBLE}"
                     bind:layout_constraintBottom_toBottomOf="parent"
                     bind:layout_constraintEnd_toStartOf="@+id/image_audio"
                     bind:layout_constraintHorizontal_bias="1.0"

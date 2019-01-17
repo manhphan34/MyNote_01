@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="framgia.com.mynote">
 
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CAMERA" />
@@ -27,7 +28,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".screen.edit.NoteUpdateActivity" />
-        <activity android:name=".screen.detail_note.DetailNoteActivity" />
+        <activity android:name=".screen.detail_note.DetailNoteActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".screen.note.NoteActivity" />
+        </activity>
 
         <receiver android:name=".widget.NoteAppWidget">
             <intent-filter>

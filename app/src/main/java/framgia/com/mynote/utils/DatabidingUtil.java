@@ -23,6 +23,13 @@ public class DatabidingUtil {
                 .into(view);
     }
 
+    @BindingAdapter("imageUrlCenter")
+    public static void loadImageCenter(ImageView view, String imageUrl) {
+        Glide.with(view.getContext())
+                .load(imageUrl)
+                .into(view);
+    }
+
     @BindingAdapter("date")
     public static void setTime(TextView textView, long time) {
         textView.setText(DateTimeUtil.convertLongToDate(time));
