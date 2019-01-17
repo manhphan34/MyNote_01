@@ -4,6 +4,10 @@
     <data>
 
         <variable
+            name="listener"
+            type="framgia.com.mynote.screen.detail_note.TaskItemUserActionListener" />
+
+        <variable
             name="task"
             type="framgia.com.mynote.data.model.Task" />
     </data>
@@ -20,6 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_8"
             android:layout_marginBottom="@dimen/dp_8"
+            android:onCheckedChanged="@{(view,isChecked)->listener.onCheckedChanged(task,isChecked)}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -43,6 +48,7 @@
             android:layout_marginEnd="@dimen/dp_8"
             android:layout_marginBottom="@dimen/dp_8"
             android:background="@android:color/white"
+            android:onClick="@{()->listener.onDeleteTaskClicked(task)}"
             android:src="@drawable/ic_garbage"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

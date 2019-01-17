@@ -40,6 +40,7 @@
     <style name="TextShowInformation" parent="Text">
         <item name="android:textSize">@dimen/sp_16</item>
         <item name="android:lineSpacingMultiplier">1.2</item>
+        <item name="android:background">@android:color/transparent</item>
     </style>
 
     <style name="CardViewItemNote" parent="Widget.MaterialComponents.CardView">
