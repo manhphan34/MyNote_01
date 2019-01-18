@@ -1,5 +1,7 @@
 package framgia.com.mynote.screen.edit;
 
+import android.content.Context;
+
 import framgia.com.mynote.data.model.Note;
 import framgia.com.mynote.utils.Media;
 
@@ -8,11 +10,11 @@ public class MediaNoteUpdate {
     private Media mMedia;
     private HandlerClick.AudioHandledClickListener mHandleClick;
 
-    public MediaNoteUpdate(Note note, HandlerClick.AudioHandledClickListener handlerClick) {
+    public MediaNoteUpdate(Context context, Note note, HandlerClick.AudioHandledClickListener handlerClick) {
         super();
         mHandleClick = handlerClick;
         mNote = note;
-        mMedia = Media.getInstance();
+        mMedia = Media.getInstance(context);
     }
 
     public void playAudio() {

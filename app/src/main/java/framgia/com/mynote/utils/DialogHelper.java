@@ -55,8 +55,12 @@ public class DialogHelper {
         }
     }
 
-    public Activity getActivity(){
+    public Activity getActivity() {
         return mDialog.getOwnerActivity();
+    }
+
+    public boolean isShowing() {
+        return mDialog.isShowing();
     }
 
     public void setView(View view) {

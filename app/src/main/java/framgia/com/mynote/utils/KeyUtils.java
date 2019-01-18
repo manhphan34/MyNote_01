@@ -5,6 +5,7 @@ import android.os.Environment;
 import java.io.File;
 
 public class KeyUtils {
+    public static String EXTRA_NOTE = "EXTRA_NOTE";
     public static final String FOLDER_APP = "mynote";
     public static final String FOLDER_IMAGE = "image";
     public static final String PATH_FOLDER_IMAGE =

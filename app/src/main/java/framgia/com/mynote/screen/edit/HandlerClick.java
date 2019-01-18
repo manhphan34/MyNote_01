@@ -30,4 +30,16 @@ public interface HandlerClick {
 
         void onLocationEmpty();
     }
+
+    interface DatePickerHandledClickListener {
+        void onChooseDate(long time);
+
+        void onChooseDateError(Exception e);
+    }
+
+    interface TimePickerHandledClickListener {
+        void onChooseHour(long time);
+
+        void onChooseHourError(Exception e);
+    }
 }
