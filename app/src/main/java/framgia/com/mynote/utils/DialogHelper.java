@@ -3,11 +3,13 @@ package framgia.com.mynote.utils;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 
 import framgia.com.mynote.R;
+
+import static android.content.DialogInterface.OnClickListener;
 
 public class DialogHelper {
     private static DialogHelper sInstance;
@@ -65,5 +67,17 @@ public class DialogHelper {
 
     public void setView(View view) {
         mDialog.setContentView(view);
+    }
+
+    public static void showConfirmDeleteDialog(Context context, String title, String message,
+                                               OnClickListener buttonPositiveLisener,
+                                               OnClickListener buttonNagativeLisener) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(title);
+        builder.setMessage(message);
+        builder.setCancelable(false);
+        builder.setPositiveButton(R.string.button_positive, buttonPositiveLisener);
+        builder.setNegativeButton(R.string.button_negative, buttonNagativeLisener);
+        builder.show();
     }
 }

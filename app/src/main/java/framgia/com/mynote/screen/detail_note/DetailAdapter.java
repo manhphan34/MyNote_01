@@ -2,6 +2,7 @@ package framgia.com.mynote.screen.detail_note;
 
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -13,14 +14,17 @@ import java.util.List;
 import framgia.com.mynote.R;
 import framgia.com.mynote.data.model.Task;
 import framgia.com.mynote.databinding.ItemTaskBinding;
+import framgia.com.mynote.utils.DialogHelper;
 
 public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.ViewHolder>
         implements TaskItemUserActionListener {
+    private Context mContext;
     private List<Task> mTasks;
     private DetailViewModel mViewModel;
     private LayoutInflater mInflater;
 
     public DetailAdapter(Context context, List<Task> tasks, DetailViewModel viewModel) {
+        mContext = context;
         mViewModel = viewModel;
         mInflater = LayoutInflater.from(context);
         mTasks = tasks;
@@ -55,8 +59,22 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.ViewHolder
 
     @Override
     public void onDeleteTaskClicked(Task task) {
-        mViewModel.getDeleteTaskEvent().setValue(task);
-        mViewModel.onDeleteTaskClicked(task);
+        DialogHelper.showConfirmDeleteDialog(mContext,
+                mContext.getString(R.string.title_delete_task_dialog),
+                mContext.getString(R.string.msg_delete_task_dialog),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mViewModel.onDeleteTaskClicked(task);
+                    }
+                }, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mViewModel.getErrorMessage().setValue(
+                                mContext.getString(R.string.msg_changed_mind_delete_task_record));
+                    }
+                });
+
     }
 
     public void addData(List<Task> tasks) {

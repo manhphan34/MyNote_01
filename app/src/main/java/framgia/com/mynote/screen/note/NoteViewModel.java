@@ -36,7 +36,6 @@ public class NoteViewModel extends AndroidViewModel {
     private SingleLiveEvent<Note> mDeleteNoteEvent = new SingleLiveEvent<>();
     private SingleLiveEvent<Note> mEditNoteEvent = new SingleLiveEvent<>();
     private SingleLiveEvent<Note> mAddNoteToHomeScreenEvent = new SingleLiveEvent<>();
-    private SingleLiveEvent<String> mSuccessMessage = new SingleLiveEvent<>();
 
     public NoteViewModel(@NonNull Application application) {
         super(application);
@@ -73,10 +72,6 @@ public class NoteViewModel extends AndroidViewModel {
 
     public SingleLiveEvent<Note> getAddNoteToHomeScreenEvent() {
         return mAddNoteToHomeScreenEvent;
-    }
-
-    public SingleLiveEvent<String> getSuccessMessage() {
-        return mSuccessMessage;
     }
 
     public void getAllNote() {
@@ -125,8 +120,7 @@ public class NoteViewModel extends AndroidViewModel {
                 .subscribe(new Consumer<Boolean>() {
                     @Override
                     public void accept(Boolean aBoolean) throws Exception {
-                        mSuccessMessage.setValue(getApplication().
-                                getResources().getString(R.string.msg_delete_note_success));
+                        mDeleteNoteEvent.setValue(note);
                     }
                 }, new Consumer<Throwable>() {
                     @Override

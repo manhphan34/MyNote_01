@@ -2,6 +2,8 @@ package framgia.com.mynote.screen.note;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -33,6 +35,12 @@ public class NoteActivity extends AppCompatActivity {
     private ActivityNoteBinding mBinding;
     private List<Note> mNotes;
     private NotesAdapter mAdapter;
+
+    public static Intent getNoteIntent(Context context, int flag) {
+        Intent intent = new Intent(context, NoteActivity.class);
+        intent.addFlags(flag);
+        return intent;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,12 +111,6 @@ public class NoteActivity extends AppCompatActivity {
                 showToast(s);
             }
         });
-        mViewModel.getSuccessMessage().observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                showToast(s);
-            }
-        });
         mViewModel.getOpenNoteEvent().observe(this, new Observer<Note>() {
             @Override
             public void onChanged(@Nullable Note note) {
@@ -118,7 +120,7 @@ public class NoteActivity extends AppCompatActivity {
         mViewModel.getDeleteNoteEvent().observe(this, new Observer<Note>() {
             @Override
             public void onChanged(@Nullable Note note) {
-
+                showToast(getString(R.string.msg_delete_note_success));
             }
         });
         mViewModel.getEditNoteEvent().observe(this, new Observer<Note>() {

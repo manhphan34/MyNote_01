@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 
 import java.util.List;
 
+import framgia.com.mynote.R;
 import framgia.com.mynote.data.model.Note;
 import framgia.com.mynote.data.model.Task;
 import framgia.com.mynote.data.repository.NoteRepository;
@@ -31,7 +32,6 @@ public class DetailViewModel extends AndroidViewModel {
     private CompositeDisposable mCompositeDisposable;
     private NoteRepository mRepository;
     private MutableLiveData<Note> mNote;
-    private SingleLiveEvent<String> mSuccessMessage = new SingleLiveEvent<>();
     private SingleLiveEvent<String> mErrorMessage = new SingleLiveEvent<>();
     private SingleLiveEvent<Task> mCheckBoxTaskEvent = new SingleLiveEvent<>();
     private SingleLiveEvent<Task> mDeleteTaskEvent = new SingleLiveEvent<>();
@@ -58,6 +58,10 @@ public class DetailViewModel extends AndroidViewModel {
             getAllTaskOfNote(mNote.getValue());
         }
         return mTasks;
+    }
+
+    public SingleLiveEvent<String> getErrorMessage() {
+        return mErrorMessage;
     }
 
     public SingleLiveEvent<Task> getCheckBoxTaskEvent() {
@@ -106,6 +110,7 @@ public class DetailViewModel extends AndroidViewModel {
                         mRepository.deleteTask(task);
                         break;
                 }
+                emitter.onNext(true);
                 emitter.onComplete();
             }
         }).observeOn(AndroidSchedulers.mainThread())
@@ -113,7 +118,15 @@ public class DetailViewModel extends AndroidViewModel {
                 .subscribe(new Consumer<Object>() {
                     @Override
                     public void accept(Object o) throws Exception {
-
+                        StringBuilder stringBuilder;
+                        switch (action) {
+                            case 0:
+                                mCheckBoxTaskEvent.setValue(task);
+                                break;
+                            default:
+                                mDeleteTaskEvent.setValue(task);
+                                break;
+                        }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
