@@ -28,6 +28,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".screen.edit.NoteUpdateActivity" />
+        <activity android:name=".screen.detail_note.DetailNoteActivity" />
 
         <receiver android:name=".widget.NoteAppWidget">
             <intent-filter>

@@ -39,7 +39,8 @@
     <string name="message_turn_on">Turn on GPS please !</string>
     <string name="message_turn_on_internet">Turn on internet please !</string>
     <string name="error_location_null">Location must not null . Please insert your location</string>
-    <string name="msg_delete_task">Delete Task</string>
+    <string name="msg_update_task">Update Task </string>
+    <string name="msg_delete_task">Delete Task </string>
     <string name="msg_success"> success !!!</string>
     <string name="button_cancle_title">Cancel</string>
     <string name="button_submit_cancel">Ok</string>
@@ -48,4 +49,12 @@
     <string name="note_save_success">Save note success</string>
     <string name="error_save_data_failed">The system is busy. Please try again later !</string>
     <string name="message_save_data_success">Save data success !</string>
+    <string name="title_delete_dialog">Confirm Delete note!</string>
+    <string name="msg_delete_note_dialog">You are about to delete Note records of database. Do you really want to proceed ?</string>
+    <string name="msg_delete_task_dialog">You are about to delete Task records of database. Do you really want to proceed ?</string>
+    <string name="button_positive">Yes</string>
+    <string name="button_negative">No</string>
+    <string name="title_delete_task_dialog">Confirm delete Task!</string>
+    <string name="msg_changed_mind_delete_note_record">You\'ve changed your mind to delete Note record!!!</string>
+    <string name="msg_changed_mind_delete_task_record">You\'ve changed your mind to delete task record!!!</string>
 </resources>

@@ -11,7 +11,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -21,6 +23,7 @@ import framgia.com.mynote.R;
 import framgia.com.mynote.data.model.Note;
 import framgia.com.mynote.data.model.Task;
 import framgia.com.mynote.databinding.ActivityDetailNoteBinding;
+import framgia.com.mynote.screen.note.NoteActivity;
 
 public class DetailNoteActivity extends AppCompatActivity {
     private static final String EXTRA_NOTE = "EXTRA_NOTE";
@@ -64,7 +67,11 @@ public class DetailNoteActivity extends AppCompatActivity {
         mViewModel.getCheckBoxTaskEvent().observe(this, new Observer<Task>() {
             @Override
             public void onChanged(@Nullable Task task) {
-
+                StringBuilder stringBuilder = new StringBuilder(
+                        getApplication().getString(R.string.msg_update_task));
+                stringBuilder.append(task.getTitle());
+                stringBuilder.append(getApplication().getString(R.string.msg_success));
+                showToast(stringBuilder.toString());
             }
         });
         mViewModel.getDeleteTaskEvent().observe(this, new Observer<Task>() {
@@ -74,6 +81,12 @@ public class DetailNoteActivity extends AppCompatActivity {
                 stringBuilder.append(task.getTitle());
                 stringBuilder.append(getString(R.string.msg_success));
                 showToast(stringBuilder.toString());
+            }
+        });
+        mViewModel.getErrorMessage().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(@Nullable String s) {
+                showToast(s);
             }
         });
     }
@@ -96,5 +109,16 @@ public class DetailNoteActivity extends AppCompatActivity {
         setSupportActionBar(mBinding.toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                startActivity(NoteActivity.getNoteIntent(this, Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }
