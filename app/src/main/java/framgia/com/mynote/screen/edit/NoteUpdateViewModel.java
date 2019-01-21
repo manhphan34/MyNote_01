@@ -128,4 +128,15 @@ public class NoteUpdateViewModel extends AndroidViewModel {
         return NoteRepository.getInstance(
                 NoteLocalDataSource.getInstance(noteDatabase.noteDao(), noteDatabase.taskDAO()));
     }
+
+    private Note initNote() {
+        Note.Builder builder = new Note.Builder();
+        builder.setId(mId.getValue())
+                .setTitle(mTitle.getValue())
+                .setDescription(mDescription.getValue())
+                .setDescription(mAudio.getValue())
+                .setImage(mImage.getValue())
+                .setLocation(mLocation.getValue())
+                .setTime(mTime.getValue());
+    }
 }
