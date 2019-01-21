@@ -1,7 +1,9 @@
 package framgia.com.mynote.screen.edit;
 
+import android.app.Dialog;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
@@ -12,7 +14,9 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -25,8 +29,12 @@ import java.io.IOException;
 import java.util.Calendar;
 
 import framgia.com.mynote.R;
+import framgia.com.mynote.data.model.Audio;
 import framgia.com.mynote.data.model.Note;
 import framgia.com.mynote.databinding.ActivityNoteDetailBinding;
+import framgia.com.mynote.screen.edit.dialog.AudioChooserDialog;
+import framgia.com.mynote.screen.edit.dialog.AudioChooserOptionDialog;
+import framgia.com.mynote.screen.edit.dialog.AudioCreatorDialog;
 import framgia.com.mynote.screen.edit.dialog.DatePickerDialog;
 import framgia.com.mynote.screen.edit.dialog.ImageChooserDialog;
 import framgia.com.mynote.screen.edit.dialog.LocationChooserDialog;
@@ -35,6 +43,7 @@ import framgia.com.mynote.utils.DateTimeUtil;
 import framgia.com.mynote.utils.FileHelper;
 import framgia.com.mynote.utils.KeyUtils;
 import framgia.com.mynote.utils.Permission;
+import framgia.com.mynote.utils.Recorder;
 
 public class NoteUpdateActivity extends AppCompatActivity implements HandlerClick.AudioHandledClickListener,
         BottomNavigationView.OnNavigationItemSelectedListener, HandlerClick.ImageHandledClickListener,
@@ -55,6 +64,8 @@ public class NoteUpdateActivity extends AppCompatActivity implements HandlerClic
     private ImageChooserDialog mOptionImage;
     private LocationChooserDialog mLocationDialog;
     private TimePickerDialog mTimePickerDialog;
+    private AudioChooserDialog mAudioChooserDialog;
+    private AudioCreatorDialog mAudioCreatorDialog;
 
     public static Intent getIntent(Context context, Note note) {
         Intent intent = new Intent(context, NoteUpdateActivity.class);
@@ -90,7 +101,7 @@ public class NoteUpdateActivity extends AppCompatActivity implements HandlerClic
 
     @Override
     public void onPlayAudio() {
-        mBinding.imageButtonSpeaker.setImageResource(R.drawable.ic_speaker_off);
+        mBinding.imageButtonSpeaker.setImageResource(R.drawable.ic_speaker_on);
     }
 
     @Override
@@ -100,7 +111,42 @@ public class NoteUpdateActivity extends AppCompatActivity implements HandlerClic
 
     @Override
     public void onStopAudio() {
-        mBinding.imageButtonSpeaker.setImageResource(R.drawable.ic_speaker_on);
+        mBinding.imageButtonSpeaker.setImageResource(R.drawable.ic_speaker_off);
+    }
+
+    @Override
+    public void onSelectedAudio(Audio audio) {
+        if (mMedia.isPlaying()) {
+            mMedia.stop();
+        }
+        mAudioChooserDialog.dismiss();
+        mUpdateViewModel.getAudio().setValue(audio.getPath());
+    }
+
+    @Override
+    public void onRecordAudioStop(String path) {
+        mAudioCreatorDialog.dismiss();
+        showDialogSaveAudio(path);
+    }
+
+    @Override
+    public void onRecordAudioStart() {
+        try {
+            mAudioCreatorDialog.record(mUpdateViewModel.getAudio().getValue());
+            Toast.makeText(this, getString(R.string.message_recording), Toast.LENGTH_SHORT).show();
+        } catch (IOException e) {
+            onRecordAudioFail();
+        }
+    }
+
+    @Override
+    public void onRecordAudioFail() {
+        Toast.makeText(this, R.string.error_recoding_audio, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onRecorded(String path) {
+        mUpdateViewModel.getAudio().setValue(path);
     }
 
     @Override
@@ -112,6 +158,9 @@ public class NoteUpdateActivity extends AppCompatActivity implements HandlerClic
                     return;
                 case Permission.REQUEST_LOCATION_PERMISSION:
                     mLocationDialog.showDialog();
+                    return;
+                case Permission.REQUEST_RECORD_AUDIO_PERMISSION:
+                    showAudioOptionDialog();
                     return;
             }
         }
@@ -129,6 +178,9 @@ public class NoteUpdateActivity extends AppCompatActivity implements HandlerClic
             case R.id.navigation_alarm:
                 DatePickerDialog datePickerDialog = new DatePickerDialog(getApplicationContext(), this);
                 datePickerDialog.showDialog();
+                break;
+            case R.id.navigation_audio:
+                requestPermissionAudio();
                 break;
         }
         return false;
@@ -194,6 +246,30 @@ public class NoteUpdateActivity extends AppCompatActivity implements HandlerClic
         Toast.makeText(getApplicationContext(), getString(R.string.error_location_null), Toast.LENGTH_SHORT).show();
     }
 
+
+    @Override
+    public void onChooseDate(long time) {
+        mTimePickerDialog = new TimePickerDialog(this, this);
+        mTimePickerDialog.showDialog();
+        mUpdateViewModel.getTime().setValue(time);
+    }
+
+    @Override
+    public void onChooseDateError(Exception e) {
+        Toast.makeText(this, R.string.error_system_busy, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onChooseHour(long time) {
+        mTimePickerDialog.dismiss();
+        mUpdateViewModel.getTime().setValue(getTime(mUpdateViewModel.getTime().getValue() + time));
+    }
+
+    @Override
+    public void onChooseHourError(Exception e) {
+        Toast.makeText(this, R.string.error_system_busy, Toast.LENGTH_SHORT).show();
+    }
+
     private void pickImage(Bitmap bitmap) {
         saveImage(bitmap);
     }
@@ -231,12 +307,14 @@ public class NoteUpdateActivity extends AppCompatActivity implements HandlerClic
 
     private void initView() {
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_note_detail);
-        mMedia = new MediaNoteUpdate(this, mNote, this);
+        mMedia = new MediaNoteUpdate(this, this);
         initToolbar(mBinding);
         mUpdateViewModel = ViewModelProviders.of(this).get(NoteUpdateViewModel.class);
         mBinding.bottomNavigation.setOnNavigationItemSelectedListener(this);
         mBinding.setLifecycleOwner(this);
         mOptionImage = new ImageChooserDialog(this, this);
+        mAudioChooserDialog = new AudioChooserDialog(this, this);
+        mAudioCreatorDialog = new AudioCreatorDialog(this, this);
         FusedLocationProviderClient providerClient = new FusedLocationProviderClient(this);
         mLocationDialog = new LocationChooserDialog(this, this, providerClient);
     }
@@ -282,6 +360,19 @@ public class NoteUpdateActivity extends AppCompatActivity implements HandlerClic
         }
     }
 
+    private void requestPermissionAudio() {
+        Permission permission = new Permission(this);
+        if (!permission.requestPermissionAudio()) {
+            showAudioOptionDialog();
+        }
+    }
+
+    private void showAudioOptionDialog() {
+        AudioChooserOptionDialog chooserOptionDialog =
+                new AudioChooserOptionDialog(this, mAudioChooserDialog, mAudioCreatorDialog);
+        chooserOptionDialog.showDialog();
+    }
+
     private void onSaveImageFail() {
         Toast.makeText(this, getString(R.string.error_system_busy), Toast.LENGTH_SHORT).show();
     }
@@ -291,30 +382,16 @@ public class NoteUpdateActivity extends AppCompatActivity implements HandlerClic
                 Calendar.getInstance().getTimeInMillis() + KeyUtils.EXTEND_IMAGE);
     }
 
-    @Override
-    public void onChooseDate(long time) {
-        mTimePickerDialog = new TimePickerDialog(this, this);
-        mTimePickerDialog.showDialog();
-        mUpdateViewModel.getTime().setValue(time);
-    }
-
-    @Override
-    public void onChooseDateError(Exception e) {
-        Toast.makeText(this, R.string.error_system_busy, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onChooseHour(long time) {
-        mTimePickerDialog.dismiss();
-        mUpdateViewModel.getTime().setValue(getTime(mUpdateViewModel.getTime().getValue() + time));
-    }
-
-    @Override
-    public void onChooseHourError(Exception e) {
-        Toast.makeText(this, R.string.error_system_busy, Toast.LENGTH_SHORT).show();
-    }
-
     private long getTime(long time) {
         return time + DateTimeUtil.TIME_COMPENSATION;
+    }
+
+    private void showDialogSaveAudio(String path) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.message_record_audio_succes)
+                .setPositiveButton(R.string.button_save_title, (dialog, id)
+                        -> mUpdateViewModel.getAudio().setValue(path))
+                .setNegativeButton(R.string.button_cancle_title, null);
+        builder.create().show();
     }
 }

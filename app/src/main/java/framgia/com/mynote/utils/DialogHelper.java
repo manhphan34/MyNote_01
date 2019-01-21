@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.support.v7.app.AlertDialog;
+import android.content.DialogInterface;
 import android.view.View;
 import android.view.Window;
 
@@ -79,5 +80,13 @@ public class DialogHelper {
         builder.setPositiveButton(R.string.button_positive, buttonPositiveLisener);
         builder.setNegativeButton(R.string.button_negative, buttonNagativeLisener);
         builder.show();
+    }
+
+    public void setAutoCancel() {
+        mDialog.setCanceledOnTouchOutside(false);
+    }
+
+    public void setDismissDialogListener(DialogInterface.OnDismissListener dismissDialogListener) {
+        mDialog.setOnDismissListener(dismissDialogListener);
     }
 }

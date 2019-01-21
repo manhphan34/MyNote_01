@@ -3,6 +3,8 @@ package framgia.com.mynote.utils;
 import android.content.Context;
 import android.media.MediaPlayer;
 
+import java.io.IOException;
+
 import framgia.com.mynote.R;
 
 public class Media {
@@ -38,7 +40,7 @@ public class Media {
         mMediaPlayer.release();
     }
 
-    public void playAudio(String path) throws Exception {
+    public void playAudio(String path) throws IOException {
         play(path);
     }
 
@@ -47,7 +49,7 @@ public class Media {
         mMediaPlayer.start();
     }
 
-    private void play(String path) throws Exception {
+    private void play(String path) throws IOException {
         if (mMediaPlayer.isPlaying()) {
             mMediaPlayer.stop();
             mMediaPlayer.reset();
@@ -56,11 +58,15 @@ public class Media {
         start(path);
     }
 
-    private void start(String path) throws Exception {
+    private void start(String path) throws IOException {
         if (path != null) {
             mMediaPlayer.setDataSource(path);
             mMediaPlayer.prepare();
             mMediaPlayer.start();
         }
+    }
+
+    public void setOnComplete(MediaPlayer.OnCompletionListener onComplete) {
+        mMediaPlayer.setOnCompletionListener(onComplete);
     }
 }
