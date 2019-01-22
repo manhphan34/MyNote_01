@@ -1,8 +1,6 @@
 package framgia.com.mynote.screen.edit;
 
-import android.content.Context;
-import android.databinding.ObservableBoolean;
-import android.media.MediaPlayer;
+import framgia.com.mynote.data.model.Audio;
 
 public interface HandlerClick {
     interface AudioHandledClickListener {
@@ -11,6 +9,16 @@ public interface HandlerClick {
         void onPlayAudioFailed();
 
         void onStopAudio();
+
+        void onSelectedAudio(Audio audio);
+
+        void onRecordAudioStop(String filePath);
+
+        void onRecordAudioStart();
+
+        void onRecordAudioFail();
+
+        void onRecorded(String path);
     }
 
     interface ImageHandledClickListener {
@@ -41,5 +49,9 @@ public interface HandlerClick {
         void onChooseHour(long time);
 
         void onChooseHourError(Exception e);
+    }
+
+    interface ItemAudioClickListener {
+        void onAudioItemSelected(Audio audio);
     }
 }

@@ -1,48 +1,53 @@
 package framgia.com.mynote.screen.edit;
 
 import android.content.Context;
+import android.media.MediaPlayer;
+import android.util.Log;
 
+import java.io.IOException;
+
+import framgia.com.mynote.R;
 import framgia.com.mynote.data.model.Note;
 import framgia.com.mynote.utils.Media;
 
-public class MediaNoteUpdate {
-    private Note mNote;
+public class MediaNoteUpdate implements MediaPlayer.OnCompletionListener {
     private Media mMedia;
     private HandlerClick.AudioHandledClickListener mHandleClick;
 
-    public MediaNoteUpdate(Context context, Note note, HandlerClick.AudioHandledClickListener handlerClick) {
+    public MediaNoteUpdate(Context context, HandlerClick.AudioHandledClickListener handlerClick) {
         super();
         mHandleClick = handlerClick;
-        mNote = note;
         mMedia = Media.getInstance(context);
+        mMedia.setOnComplete(this::onCompletion);
     }
 
-    public void playAudio() {
+    public void playAudio(String path) {
         if (mMedia.isPlaying()) {
-            stopRecord();
+            stop();
             changeUIOfAudioImage();
             return;
         }
-        play();
+        play(path);
+    }
+
+    public boolean isPlaying() {
+        return mMedia.isPlaying();
     }
 
     public void onDestroy() {
         mMedia.release();
     }
 
-    private void play() {
-        if (mNote != null && mNote.getAudio() != null)
-            try {
-                mMedia.playAudio(mNote.getAudio());
-                changeUIOfAudioImage();
-                return;
-            } catch (Exception e) {
-                mHandleClick.onPlayAudioFailed();
-            }
-        mHandleClick.onPlayAudioFailed();
+    private void play(String path) {
+        try {
+            mMedia.playAudio(path);
+            changeUIOfAudioImage();
+        } catch (IOException e) {
+            mHandleClick.onPlayAudioFailed();
+        }
     }
 
-    private void stopRecord() {
+    public void stop() {
         mMedia.stop();
         mMedia.reset();
         changeUIOfAudioImage();
@@ -54,5 +59,11 @@ public class MediaNoteUpdate {
             return;
         }
         mHandleClick.onStopAudio();
+    }
+
+    @Override
+    public void onCompletion(MediaPlayer mp) {
+        mHandleClick.onPlayAudio();
+        mMedia.reset();
     }
 }
