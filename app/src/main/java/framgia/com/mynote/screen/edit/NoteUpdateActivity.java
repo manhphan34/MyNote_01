@@ -1,9 +1,7 @@
 package framgia.com.mynote.screen.edit;
 
-import android.app.Dialog;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
@@ -16,7 +14,9 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -26,11 +26,14 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import framgia.com.mynote.R;
 import framgia.com.mynote.data.model.Audio;
 import framgia.com.mynote.data.model.Note;
+import framgia.com.mynote.data.model.Task;
 import framgia.com.mynote.databinding.ActivityNoteDetailBinding;
 import framgia.com.mynote.screen.edit.dialog.AudioChooserDialog;
 import framgia.com.mynote.screen.edit.dialog.AudioChooserOptionDialog;
@@ -40,15 +43,15 @@ import framgia.com.mynote.screen.edit.dialog.ImageChooserDialog;
 import framgia.com.mynote.screen.edit.dialog.LocationChooserDialog;
 import framgia.com.mynote.screen.edit.dialog.TimePickerDialog;
 import framgia.com.mynote.utils.DateTimeUtil;
+import framgia.com.mynote.utils.DialogHelper;
 import framgia.com.mynote.utils.FileHelper;
 import framgia.com.mynote.utils.KeyUtils;
 import framgia.com.mynote.utils.Permission;
-import framgia.com.mynote.utils.Recorder;
 
 public class NoteUpdateActivity extends AppCompatActivity implements HandlerClick.AudioHandledClickListener,
         BottomNavigationView.OnNavigationItemSelectedListener, HandlerClick.ImageHandledClickListener,
         HandlerClick.LocationHandledListener, HandlerClick.DatePickerHandledClickListener,
-        HandlerClick.TimePickerHandledClickListener {
+        HandlerClick.TimePickerHandledClickListener, HandlerClick.TaskHandleListener {
     public static final String EXTRA_NOTE = "EXTRA_NOTE";
     public static final float TEXT_TOOL_BAR_SIZE = 18;
     public static final int PICK_IMAGE_FROM_GALLERY = 0x248;
@@ -66,6 +69,7 @@ public class NoteUpdateActivity extends AppCompatActivity implements HandlerClic
     private TimePickerDialog mTimePickerDialog;
     private AudioChooserDialog mAudioChooserDialog;
     private AudioCreatorDialog mAudioCreatorDialog;
+    private List<Task> mTasks;
 
     public static Intent getIntent(Context context, Note note) {
         Intent intent = new Intent(context, NoteUpdateActivity.class);
@@ -96,6 +100,8 @@ public class NoteUpdateActivity extends AppCompatActivity implements HandlerClic
     @Override
     protected void onDestroy() {
         mMedia.onDestroy();
+        mUpdateViewModel.onDestroy();
+        DialogHelper.release();
         super.onDestroy();
     }
 
@@ -182,11 +188,13 @@ public class NoteUpdateActivity extends AppCompatActivity implements HandlerClic
                 break;
             case R.id.navigation_audio:
                 requestPermissionAudio();
+            case R.id.navigation_task:
+                mTasks.add(new Task(mUpdateViewModel.getId().getValue(), getString(R.string.taks_title_default), 0));
+                mUpdateViewModel.getTasks().setValue(mTasks);
                 break;
         }
         return false;
     }
-
 
     @Override
     public void onChooseImageFromGallery() {
@@ -278,14 +286,14 @@ public class NoteUpdateActivity extends AppCompatActivity implements HandlerClic
     private void saveImage(Bitmap bitmap) {
         try {
             FileHelper fileHelper = new FileHelper();
-            if (mUpdateViewModel.getImage().getValue() != null) {
-                fileHelper.deleteFile(new File(mUpdateViewModel.getImage().getValue()));
+            if (mUpdateViewModel.getImageUrl().getValue() != null) {
+                fileHelper.deleteFile(new File(mUpdateViewModel.getImageUrl().getValue()));
             }
             File file = initFile();
             fileHelper.createFile(file);
             fileHelper.writeFileImage(file, bitmap);
             mOptionImage.dismiss();
-            mUpdateViewModel.getImage().setValue(file.getPath());
+            mUpdateViewModel.getImageUrl().setValue(file.getPath());
         } catch (IOException e) {
             onSaveImageFail();
         }
@@ -316,15 +324,19 @@ public class NoteUpdateActivity extends AppCompatActivity implements HandlerClic
         mOptionImage = new ImageChooserDialog(this, this);
         mAudioChooserDialog = new AudioChooserDialog(this, this);
         mAudioCreatorDialog = new AudioCreatorDialog(this, this);
+        initRecycle();
+        mUpdateViewModel.setTaskAdapter(new TaskAdapter(this, this));
         FusedLocationProviderClient providerClient = new FusedLocationProviderClient(this);
         mLocationDialog = new LocationChooserDialog(this, this, providerClient);
     }
 
     private void initData() {
         mNote = getNote();
+        mTasks = new ArrayList<>();
         mBinding.setViewModel(mUpdateViewModel);
         mBinding.setMedia(mMedia);
         mUpdateViewModel.setData(mNote);
+        getTasks();
     }
 
     private Note getNote() {
@@ -383,6 +395,7 @@ public class NoteUpdateActivity extends AppCompatActivity implements HandlerClic
                 Calendar.getInstance().getTimeInMillis() + KeyUtils.EXTEND_IMAGE);
     }
 
+
     private long getTime(long time) {
         return time + DateTimeUtil.TIME_COMPENSATION;
     }
@@ -394,5 +407,42 @@ public class NoteUpdateActivity extends AppCompatActivity implements HandlerClic
                         -> mUpdateViewModel.getAudio().setValue(path))
                 .setNegativeButton(R.string.button_cancle_title, null);
         builder.create().show();
+    }
+
+    private void getTasks() {
+        mUpdateViewModel.getTasks().observe(this, tasks -> {
+            mUpdateViewModel.getTaskAdapter().replaceData(tasks);
+        });
+    }
+
+    private void initRecycle() {
+        mBinding.recyclerTask.addItemDecoration(
+                new DividerItemDecoration(getApplicationContext(),
+                        LinearLayoutManager.VERTICAL));
+        mBinding.recyclerTask.setItemAnimator(new DefaultItemAnimator());
+    }
+
+    @Override
+    public void onStatusChange(int pos, Task task) {
+        updateTask(pos, task);
+    }
+
+    @Override
+    public void onDeleteTask(int pos) {
+        mTasks.remove(pos);
+        mUpdateViewModel.getTasks().setValue(mTasks);
+    }
+
+    @Override
+    public void onTitleChange(int pos, Task task) {
+        updateTask(pos, task);
+    }
+
+    private void updateTask(int pos, Task task) {
+        if (!mBinding.recyclerTask.isComputingLayout()) {
+            mTasks.add(pos, task);
+            mTasks.remove(pos++);
+            mUpdateViewModel.getTasks().setValue(mTasks);
+        }
     }
 }

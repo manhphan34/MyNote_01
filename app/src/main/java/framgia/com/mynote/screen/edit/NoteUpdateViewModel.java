@@ -5,11 +5,17 @@ import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
+import java.util.List;
+
 import framgia.com.mynote.data.model.Note;
+import framgia.com.mynote.data.model.Task;
 import framgia.com.mynote.data.repository.NoteRepository;
 import framgia.com.mynote.data.source.local.note.NoteDatabase;
 import framgia.com.mynote.data.source.local.note.NoteLocalDataSource;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class NoteUpdateViewModel extends AndroidViewModel {
     private MutableLiveData<Integer> mId;
@@ -18,12 +24,14 @@ public class NoteUpdateViewModel extends AndroidViewModel {
     private MutableLiveData<String> mLocation;
     private MutableLiveData<String> mAudio;
     private MutableLiveData<Long> mTime;
-    private MutableLiveData<String> mImage;
+    private MutableLiveData<String> mImageUrl;
     private MutableLiveData<Integer> mHasTask;
+    private MutableLiveData<List<Task>> mTasks;
     private MutableLiveData<String> mSuccessMessage;
     private MutableLiveData<String> mErrorMessage;
     private CompositeDisposable mCompositeDisposable;
     private NoteRepository mRepository;
+    private TaskAdapter mTaskAdapter;
 
     public NoteUpdateViewModel(@NonNull Application application) {
         super(application);
@@ -73,11 +81,11 @@ public class NoteUpdateViewModel extends AndroidViewModel {
         return mTime;
     }
 
-    public MutableLiveData<String> getImage() {
-        if (mImage == null) {
-            mImage = new MutableLiveData<>();
+    public MutableLiveData<String> getImageUrl() {
+        if (mImageUrl == null) {
+            mImageUrl = new MutableLiveData<>();
         }
-        return mImage;
+        return mImageUrl;
     }
 
     public MutableLiveData<Integer> getHasTask() {
@@ -101,8 +109,32 @@ public class NoteUpdateViewModel extends AndroidViewModel {
         return mErrorMessage;
     }
 
+    public MutableLiveData<List<Task>> getTasks() {
+        if (mTasks == null) {
+            mTasks = new MutableLiveData<>();
+        }
+        return mTasks;
+    }
+
+    public TaskAdapter getTaskAdapter() {
+        return mTaskAdapter;
+    }
+
+    public void setTaskAdapter(TaskAdapter taskAdapter) {
+        mTaskAdapter = taskAdapter;
+    }
+
+    private void getData(int nodeId) {
+        Disposable disposable = mRepository.getAllTaskOfNote(nodeId)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(tasks -> mTasks.setValue(tasks));
+        mCompositeDisposable.add(disposable);
+    }
+
     public void setData(Note note) {
         if (note == null) {
+            getIdNote();
             return;
         }
         mId.setValue(note.getId());
@@ -112,7 +144,7 @@ public class NoteUpdateViewModel extends AndroidViewModel {
             mDescription.setValue(note.getDescription());
         }
         if (note.getImage() != null) {
-            mImage.setValue(note.getImage());
+            mImageUrl.setValue(note.getImage());
         }
         if (note.getAudio() != null) {
             mAudio.setValue(note.getAudio());
@@ -121,11 +153,34 @@ public class NoteUpdateViewModel extends AndroidViewModel {
             mLocation.setValue(note.getLocation());
         }
         mHasTask.setValue(note.getHasTask());
+        if (mHasTask.getValue() == 1) {
+            getData(mId.getValue());
+        }
     }
 
     private NoteRepository getNoteRepo() {
         NoteDatabase noteDatabase = NoteDatabase.getInstance(getApplication());
         return NoteRepository.getInstance(
                 NoteLocalDataSource.getInstance(noteDatabase.noteDao(), noteDatabase.taskDAO()));
+    }
+
+    private void getIdNote() {
+        Disposable disposable = mRepository.getNotes()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(notes -> {
+                    if (notes.size() == 0) {
+                        getId().setValue(0);
+                        return;
+                    }
+                    getId().setValue(notes.get(notes.size() - 1).getId() + 1);
+                });
+        mCompositeDisposable.add(disposable);
+    }
+
+    public void onDestroy() {
+        if (mCompositeDisposable != null) {
+            mCompositeDisposable.dispose();
+        }
     }
 }

@@ -63,4 +63,5 @@
     <string name="button_save_title">Save</string>
     <string name="button_cancel_title">Cancel</string>
     <string name="message_recording">Recording</string>
+    <string name="taks_title_default">Insert your title</string>
 </resources>

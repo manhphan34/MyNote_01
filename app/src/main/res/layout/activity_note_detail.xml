@@ -18,7 +18,9 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
 
         <include
             android:id="@+id/tool_bar_include"
@@ -80,12 +82,14 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/view" />
 
-                <FrameLayout
-                    android:id="@+id/frame_tasks"
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_task"
+                    setAdapter="@{viewModel.taskAdapter}"
                     android:layout_width="@dimen/dp_0"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginTop="@dimen/dp_8"
-                    android:visibility="@{safeUnbox(viewModel.hasTask) == 1 ? View.INVISIBLE : View.GONE}"
+                    android:nestedScrollingEnabled="false"
+                    app:layoutManager="android.support.v7.widget.LinearLayoutManager"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/text_note_description" />
@@ -101,7 +105,7 @@
                     android:visibility="@{safeUnbox(viewModel.time) > 0 ? View.VISIBLE : View.GONE}"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/frame_tasks"
+                    app:layout_constraintTop_toBottomOf="@+id/recycler_task"
                     app:setDate="@{safeUnbox(viewModel.time)}" />
 
                 <TextView
@@ -115,7 +119,7 @@
                     android:visibility="@{viewModel.location != null ? View.VISIBLE : View.INVISIBLE}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/text_note_alarm"
-                    app:layout_constraintTop_toBottomOf="@+id/frame_tasks"
+                    app:layout_constraintTop_toBottomOf="@+id/recycler_task"
                     bind:style="@style/TextShowInformation" />
 
                 <TextView

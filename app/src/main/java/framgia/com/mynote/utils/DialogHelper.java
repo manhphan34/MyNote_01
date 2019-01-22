@@ -18,6 +18,13 @@ public class DialogHelper {
     private Context mContext;
     private Window mWindow;
 
+    public static void release() {
+        if (sInstance == null) {
+            return;
+        }
+        sInstance = null;
+    }
+
     private DialogHelper(Context context) {
         mContext = context;
         mDialog = new Dialog(mContext);
