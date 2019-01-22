@@ -3,6 +3,7 @@ package framgia.com.mynote.screen.edit.receiver;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import framgia.com.mynote.data.model.Note;
 import framgia.com.mynote.screen.edit.service.AlarmService;

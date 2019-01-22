@@ -1,9 +1,9 @@
 package framgia.com.mynote.screen.edit;
 
-import android.app.Dialog;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
@@ -16,7 +16,9 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -26,11 +28,14 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import framgia.com.mynote.R;
 import framgia.com.mynote.data.model.Audio;
 import framgia.com.mynote.data.model.Note;
+import framgia.com.mynote.data.model.Task;
 import framgia.com.mynote.databinding.ActivityNoteDetailBinding;
 import framgia.com.mynote.screen.edit.dialog.AudioChooserDialog;
 import framgia.com.mynote.screen.edit.dialog.AudioChooserOptionDialog;
@@ -39,16 +44,17 @@ import framgia.com.mynote.screen.edit.dialog.DatePickerDialog;
 import framgia.com.mynote.screen.edit.dialog.ImageChooserDialog;
 import framgia.com.mynote.screen.edit.dialog.LocationChooserDialog;
 import framgia.com.mynote.screen.edit.dialog.TimePickerDialog;
+import framgia.com.mynote.screen.edit.receiver.AlarmReceiver;
+import framgia.com.mynote.screen.note.NoteActivity;
 import framgia.com.mynote.utils.DateTimeUtil;
 import framgia.com.mynote.utils.FileHelper;
 import framgia.com.mynote.utils.KeyUtils;
 import framgia.com.mynote.utils.Permission;
-import framgia.com.mynote.utils.Recorder;
 
 public class NoteUpdateActivity extends AppCompatActivity implements HandlerClick.AudioHandledClickListener,
         BottomNavigationView.OnNavigationItemSelectedListener, HandlerClick.ImageHandledClickListener,
         HandlerClick.LocationHandledListener, HandlerClick.DatePickerHandledClickListener,
-        HandlerClick.TimePickerHandledClickListener {
+        HandlerClick.TimePickerHandledClickListener, HandlerClick.TaskHandleListener {
     public static final String EXTRA_NOTE = "EXTRA_NOTE";
     public static final float TEXT_TOOL_BAR_SIZE = 18;
     public static final int PICK_IMAGE_FROM_GALLERY = 0x248;
@@ -66,6 +72,7 @@ public class NoteUpdateActivity extends AppCompatActivity implements HandlerClic
     private TimePickerDialog mTimePickerDialog;
     private AudioChooserDialog mAudioChooserDialog;
     private AudioCreatorDialog mAudioCreatorDialog;
+    private List<Task> mTasks;
 
     public static Intent getIntent(Context context, Note note) {
         Intent intent = new Intent(context, NoteUpdateActivity.class);
@@ -88,7 +95,11 @@ public class NoteUpdateActivity extends AppCompatActivity implements HandlerClic
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_save) {
-            return false;
+            if (mNote == null) {
+                mUpdateViewModel.insert();
+                return false;
+            }
+            mUpdateViewModel.update();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -96,6 +107,7 @@ public class NoteUpdateActivity extends AppCompatActivity implements HandlerClic
     @Override
     protected void onDestroy() {
         mMedia.onDestroy();
+        mUpdateViewModel.onDestroy();
         super.onDestroy();
     }
 
@@ -182,6 +194,9 @@ public class NoteUpdateActivity extends AppCompatActivity implements HandlerClic
                 break;
             case R.id.navigation_audio:
                 requestPermissionAudio();
+            case R.id.navigation_task:
+                mTasks.add(new Task(mUpdateViewModel.getId().getValue(), getString(R.string.task_title_default), 0));
+                mUpdateViewModel.getTasks().setValue(mTasks);
                 break;
         }
         return false;
@@ -316,15 +331,31 @@ public class NoteUpdateActivity extends AppCompatActivity implements HandlerClic
         mOptionImage = new ImageChooserDialog(this, this);
         mAudioChooserDialog = new AudioChooserDialog(this, this);
         mAudioCreatorDialog = new AudioCreatorDialog(this, this);
+        initRecycle();
+        mUpdateViewModel.setTaskAdapter(new TaskAdapter(this, this));
         FusedLocationProviderClient providerClient = new FusedLocationProviderClient(this);
         mLocationDialog = new LocationChooserDialog(this, this, providerClient);
     }
 
     private void initData() {
         mNote = getNote();
+        mTasks = new ArrayList<>();
         mBinding.setViewModel(mUpdateViewModel);
         mBinding.setMedia(mMedia);
         mUpdateViewModel.setData(mNote);
+        mUpdateViewModel.getErrorMessage().observe(this,
+                s -> Toast.makeText(NoteUpdateActivity.this, s, Toast.LENGTH_SHORT).show());
+        mUpdateViewModel.getSuccessMessage().observe(this,
+                s -> Toast.makeText(NoteUpdateActivity.this, s, Toast.LENGTH_SHORT).show());
+        mUpdateViewModel.getSaveNoteSuccess().observe(this,
+                s -> {
+                    startActivity(NoteActivity.getNoteIntent(getApplicationContext(),
+                            Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                                    Intent.FLAG_ACTIVITY_NEW_TASK |
+                                    Intent.FLAG_ACTIVITY_CLEAR_TASK));
+                    setAlarm();
+                });
+        getTasks();
     }
 
     private Note getNote() {
@@ -395,4 +426,55 @@ public class NoteUpdateActivity extends AppCompatActivity implements HandlerClic
                 .setNegativeButton(R.string.button_cancle_title, null);
         builder.create().show();
     }
+
+    private void getTasks() {
+        mUpdateViewModel.getTasks().observe(this, tasks -> {
+            mTasks = tasks;
+            mUpdateViewModel.getTaskAdapter().replaceData(tasks);
+        });
+    }
+
+    private void initRecycle() {
+        mBinding.recyclerTask.addItemDecoration(
+                new DividerItemDecoration(getApplicationContext(),
+                        LinearLayoutManager.VERTICAL));
+        mBinding.recyclerTask.setItemAnimator(new DefaultItemAnimator());
+    }
+
+    @Override
+    public void onStatusChange(int pos, Task task) {
+        updateTask(pos, task);
+    }
+
+    @Override
+    public void onDeleteTask(int pos) {
+        mTasks.remove(pos);
+        mUpdateViewModel.getTasks().setValue(mTasks);
+    }
+
+    @Override
+    public void onTitleChange(int pos, Task task) {
+        updateTask(pos, task);
+    }
+
+    private void updateTask(int pos, Task task) {
+        if (!mBinding.recyclerTask.isComputingLayout()) {
+            mTasks.add(pos, task);
+            mTasks.remove(pos + 1);
+            mUpdateViewModel.getTasks().setValue(mTasks);
+        }
+    }
+
+    private void setAlarm() {
+        if (mUpdateViewModel.getTime().getValue() <= 0) {
+            return;
+        }
+        PendingIntent pendingIntent =
+                PendingIntent.getBroadcast(getApplicationContext(), mUpdateViewModel.getId().getValue(),
+                        AlarmReceiver.getIntent(getApplicationContext(), mUpdateViewModel.getNote()),
+                        PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager alarmManager = (AlarmManager) this.getSystemService(ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, mUpdateViewModel.getTime().getValue(), pendingIntent);
+    }
 }
+

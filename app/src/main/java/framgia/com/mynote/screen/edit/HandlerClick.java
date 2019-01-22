@@ -1,6 +1,7 @@
 package framgia.com.mynote.screen.edit;
 
 import framgia.com.mynote.data.model.Audio;
+import framgia.com.mynote.data.model.Task;
 
 public interface HandlerClick {
     interface AudioHandledClickListener {
@@ -53,5 +54,13 @@ public interface HandlerClick {
 
     interface ItemAudioClickListener {
         void onAudioItemSelected(Audio audio);
+    }
+
+    interface TaskHandleListener {
+        void onStatusChange(int pos, Task task);
+
+        void onDeleteTask(int pos);
+
+        void onTitleChange(int pos, Task task);
     }
 }

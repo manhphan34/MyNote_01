@@ -24,7 +24,11 @@ public interface NoteDataSource {
 
         void insertTask(Task task);
 
+        void insertTasks(List<Task> tasks);
+
         void updateTask(Task task);
+
+        void updateTask(List<Task> tasks);
 
         void deleteTask(Task task);
 

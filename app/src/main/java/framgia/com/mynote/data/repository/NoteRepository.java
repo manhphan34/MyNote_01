@@ -63,8 +63,18 @@ public class NoteRepository implements NoteDataSource.Local {
     }
 
     @Override
+    public void insertTasks(List<Task> tasks) {
+        mLocal.insertTasks(tasks);
+    }
+
+    @Override
     public void updateTask(Task task) {
         mLocal.updateTask(task);
+    }
+
+    @Override
+    public void updateTask(List<Task> tasks) {
+        mLocal.updateTask(tasks);
     }
 
     @Override

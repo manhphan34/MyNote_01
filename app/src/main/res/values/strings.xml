@@ -63,4 +63,7 @@
     <string name="button_save_title">Save</string>
     <string name="button_cancel_title">Cancel</string>
     <string name="message_recording">Recording</string>
+    <string name="message_save_note_success">Save note success !</string>
+    <string name="note_title_is_empty">The title is not empty !</string>
+    <string name="task_title_default">Insert your title</string>
 </resources>

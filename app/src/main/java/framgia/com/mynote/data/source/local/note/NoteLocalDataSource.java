@@ -67,8 +67,18 @@ public class NoteLocalDataSource implements NoteDataSource.Local {
     }
 
     @Override
+    public void insertTasks(List<Task> tasks) {
+        mTaskDAO.insertTask(tasks);
+    }
+
+    @Override
     public void updateTask(Task task) {
         mTaskDAO.updateTask(task);
+    }
+
+    @Override
+    public void updateTask(List<Task> tasks) {
+        mTaskDAO.updateTasks(tasks);
     }
 
     @Override

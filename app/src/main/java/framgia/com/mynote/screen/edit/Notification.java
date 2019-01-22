@@ -37,7 +37,7 @@ public class Notification {
         return new NotificationCompat.Builder(mContext, CHANNEL_ID)
                 .setSmallIcon(R.mipmap.ic_app)
                 .setContentTitle(title)
-                .setContentText(getSmallContent(title))
+                .setContentText(getSmallContent(content))
                 .setStyle(new NotificationCompat.BigTextStyle()
                         .bigText(content))
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);

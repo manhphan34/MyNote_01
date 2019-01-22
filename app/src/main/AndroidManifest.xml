@@ -28,7 +28,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".screen.edit.NoteUpdateActivity" />
+        <activity android:name=".screen.edit.NoteUpdateActivity">
+
+        </activity>
         <activity android:name=".screen.detail_note.DetailNoteActivity" />
 
         <receiver android:name=".widget.NoteAppWidget">
@@ -39,18 +41,13 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/note_app_widget_info" />
         </receiver>
-        <receiver
-            android:name=".screen.edit.receiver.OpenDetailReceiver"
-            android:exported="false" />
-        <receiver
-            android:name=".screen.edit.receiver.AlarmReceiver"
-            android:exported="false" />
-        <receiver
-            android:name=".screen.edit.receiver.DismissNotificationReceiver"
-            android:exported="false" />
+        <receiver android:name=".screen.edit.receiver.OpenDetailReceiver" />
+        <receiver android:name=".screen.edit.receiver.AlarmReceiver" />
+        <receiver android:name=".screen.edit.receiver.DismissNotificationReceiver" />
 
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+        <service android:name=".screen.edit.service.AlarmService" />
     </application>
 </manifest>

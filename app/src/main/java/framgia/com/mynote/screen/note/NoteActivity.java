@@ -14,6 +14,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +24,7 @@ import java.util.List;
 import framgia.com.mynote.R;
 import framgia.com.mynote.data.model.Note;
 import framgia.com.mynote.databinding.ActivityNoteBinding;
+import framgia.com.mynote.generated.callback.OnClickListener;
 import framgia.com.mynote.screen.detail_note.DetailNoteActivity;
 import framgia.com.mynote.screen.edit.NoteUpdateActivity;
 
@@ -135,6 +137,8 @@ public class NoteActivity extends AppCompatActivity {
 
             }
         });
+        mBinding.fabCreateNewNote.setOnClickListener(
+                v -> startActivity(NoteUpdateActivity.getIntent(getApplicationContext(), null)));
     }
 
     public void showToast(String s) {
