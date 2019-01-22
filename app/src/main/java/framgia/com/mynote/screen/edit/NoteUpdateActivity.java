@@ -175,6 +175,7 @@ public class NoteUpdateActivity extends AppCompatActivity implements HandlerClic
                 break;
             case R.id.navigation_location:
                 requestPermissionLocation();
+                break;
             case R.id.navigation_alarm:
                 DatePickerDialog datePickerDialog = new DatePickerDialog(getApplicationContext(), this);
                 datePickerDialog.showDialog();
@@ -205,7 +206,7 @@ public class NoteUpdateActivity extends AppCompatActivity implements HandlerClic
             return;
         }
         switch (requestCode) {
-            case PICK_IMAGE_FROM_CAMERA:
+            case PICK_IMAGE_FROM_GALLERY:
                 try {
                     Bitmap bitmap =
                             MediaStore.Images.Media.getBitmap(this.getContentResolver(), data.getData());
@@ -214,7 +215,7 @@ public class NoteUpdateActivity extends AppCompatActivity implements HandlerClic
                 } catch (IOException e) {
                     onSaveImageFail();
                 }
-            case PICK_IMAGE_FROM_GALLERY:
+            case PICK_IMAGE_FROM_CAMERA:
                 pickImage((Bitmap) data.getExtras().get(DATA_FROM_CAMERA));
                 break;
         }

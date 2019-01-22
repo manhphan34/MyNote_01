@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="audioCreator"
+            type="framgia.com.mynote.screen.edit.dialog.AudioCreatorDialog" />
+    </data>
+
+    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="@dimen/dp_150"
+        android:layout_height="wrap_content"
+
+        android:background="#f6935d">
+
+        <ImageButton
+            android:id="@+id/image_record"
+            android:background="@android:color/transparent"
+            android:layout_width="@dimen/dp_100"
+            android:layout_height="@dimen/dp_100"
+            android:layout_marginTop="@dimen/dp_8"
+            android:layout_marginBottom="@dimen/dp_8"
+            android:onClick="@{()-> audioCreator.onRecording()}"
+            android:src="@drawable/ic_microphone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_time" />
+
+        <TextView
+            android:id="@+id/text_time"
+            style="@style/TextShowInformation"
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:gravity="center"
+            android:text="@string/text_time_default"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/sp_22"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </android.support.constraint.ConstraintLayout>
+</layout>

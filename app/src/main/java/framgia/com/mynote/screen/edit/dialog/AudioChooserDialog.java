@@ -43,6 +43,11 @@ public class AudioChooserDialog extends BaseDialog implements
         mClickListener.onSelectedAudio(audio);
     }
 
+    @Override
+    public void setLocation() {
+
+    }
+
     public void showDialog() {
         mBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.dialog_audio_choose, null, false);
         mDialogHelper.setView(mBinding.getRoot());
