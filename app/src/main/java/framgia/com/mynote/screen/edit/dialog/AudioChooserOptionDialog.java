@@ -33,6 +33,11 @@ public class AudioChooserOptionDialog extends BaseDialog {
         fileHelper.createFolder(new File(KeyUtils.PATH_FOLDER_AUDIO));
     }
 
+    @Override
+    public void setLocation() {
+
+    }
+
     public void showDialog() {
         mBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.dialog_audio_option, null, false);
         mDialogHelper.setView(mBinding.getRoot());

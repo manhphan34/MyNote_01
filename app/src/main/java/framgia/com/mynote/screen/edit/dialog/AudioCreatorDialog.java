@@ -9,6 +9,9 @@ import android.view.LayoutInflater;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
@@ -29,8 +32,10 @@ import io.reactivex.schedulers.Schedulers;
 
 public class AudioCreatorDialog extends BaseDialog implements DialogInterface.OnDismissListener {
     public static final String AUDIO_TIME_PATTERN = "mm:ss";
-    public static final double DIALOG_WIDTH = 0.5;
-    public static final double DIALOG_HEIGHT = 0.2;
+    public static final double DIALOG_WIDTH = 0.7;
+    public static final double DIALOG_HEIGHT = 0.3;
+    public static final int IMAGE_WIDTH = 120;
+    public static final int IMAGE_HEIGHT = 120;
     private DialogCreateAudioBinding mBinding;
     private Context mContext;
     private HandlerClick.AudioHandledClickListener mClickListener;
@@ -47,6 +52,11 @@ public class AudioCreatorDialog extends BaseDialog implements DialogInterface.On
     }
 
     @Override
+    public void setLocation() {
+
+    }
+
+    @Override
     public void showDialog() {
         mBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.dialog_create_audio, null, false);
         mDialogHelper.setView(mBinding.getRoot());
@@ -55,6 +65,7 @@ public class AudioCreatorDialog extends BaseDialog implements DialogInterface.On
         mBinding.setAudioCreator(this);
         setPostion(Gravity.CENTER);
         mDialogHelper.setDismissDialogListener(this);
+        stopRecordAudio();
         show();
     }
 
@@ -75,7 +86,6 @@ public class AudioCreatorDialog extends BaseDialog implements DialogInterface.On
         if (mIsRecording) {
             mIsRecording = false;
             mRecorder.stopRecording();
-            mBinding.imageRecord.setImageResource(R.drawable.ic_play);
             if (!mDisposable.isDisposed()) {
                 mDisposable.dispose();
             }
@@ -84,7 +94,7 @@ public class AudioCreatorDialog extends BaseDialog implements DialogInterface.On
         }
         updateTime();
         mIsRecording = true;
-        mBinding.imageRecord.setImageResource(R.drawable.ic_stop);
+        startRecordAudio();
         mClickListener.onRecordAudioStart();
     }
 
@@ -110,5 +120,17 @@ public class AudioCreatorDialog extends BaseDialog implements DialogInterface.On
                 .subscribe(aLong -> {
                     mBinding.textTime.setText(DateFormat.format(AUDIO_TIME_PATTERN, new Date(aLong * 1000)).toString());
                 });
+    }
+
+    private void stopRecordAudio() {
+        Glide.with(mContext).load(R.drawable.ic_micro)
+                .apply(new RequestOptions().override(IMAGE_WIDTH, IMAGE_HEIGHT))
+                .into(mBinding.imageRecord);
+    }
+
+    private void startRecordAudio() {
+        Glide.with(mContext).load(R.drawable.ic_microphone)
+                .apply(new RequestOptions().override(IMAGE_WIDTH, IMAGE_HEIGHT))
+                .into(mBinding.imageRecord);
     }
 }
